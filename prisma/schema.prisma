@@ -1,0 +1,65 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model GameGroup {
+  id                Int                @id @default(autoincrement())
+  GroupName         String
+  gameGroupFactions GameGroupFaction[]
+  users           User[]
+}
+
+
+model User {
+  id     Int     @id @default(autoincrement())
+  name   String
+  email  String
+  pickOrder Int
+  custodian Boolean
+
+  factionId Int?         @unique
+  faction   Faction?     @relation(fields: [factionId], references: [id])
+  gameGroupId Int
+  gamegroup GameGroup @relation(fields: [gameGroupId], references: [id])
+  tokens Token[]
+}
+
+model Faction {
+  id                Int                @id @default(autoincrement())
+  name              String
+  url               String
+  gameGroupFactions GameGroupFaction[]
+  user            User?
+}
+
+model GameGroupFaction {
+  id          Int       @id @default(autoincrement())
+  banned      Boolean
+  picked      Boolean
+  factionId   Int
+  gameGroupId Int
+  faction     Faction   @relation(fields: [factionId], references: [id])
+  gameGroup   GameGroup @relation(fields: [gameGroupId], references: [id])
+}
+
+model Token {
+  id         Int       @id @default(autoincrement())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  type       TokenType
+  emailToken String?   @unique
+  valid      Boolean   @default(true)
+  expiration DateTime
+  userId     Int
+  user       User      @relation(fields: [userId], references: [id])
+}
+
+enum TokenType {
+  EMAIL
+  API
+}

@@ -1,47 +1,90 @@
-.container {
-  min-height: 100vh;
-  padding: 0 0.5rem;
+.maincontainer {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  justify-content: space-around;
   height: 100vh;
 }
-
-.main {
-  padding: 5rem 0;
-  flex: 1;
+.body {
+  justify-content: space-between;
   display: flex;
+  height: 100%;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+}
+.item1 {
+flex: 1;
+order: 1;
+border-style: dashed; 
+}
+.item2 {
+flex-grow: 1;
+order: 2;
+border-style: dashed; 
+}
+.login_info {
+flex-grow: 1;
+order: 3;
+border-style: dashed; 
 }
 
-.footer {
-  width: 100%;
-  height: 100px;
-  border-top: 1px solid #eaeaea;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.pick_button {
+flex-grow: 1;
+order: 1;
+border-style: dashed; 
 }
 
-.footer a {
+.galaxy {
+flex: 3;
+border-style: dashed; 
+order: 2;
+}
+
+.pick_order {
+flex-grow: 1;
+order: 3;
+border-style: dashed; 
+}
+
+.picks {
+flex-grow: 1;
+order: 1;
+border-style: dashed; 
+}
+
+.item3 {
+flex-grow: 1;
+order: 2;
+border-style: dashed; 
+}
+.header{
+  min-height: 1;
   display: flex;
-  justify-content: center;
-  align-items: center;
+   justify-content: center;
+   align-items: stretch;
+  flex-direction: row;
+}
+
+.body_row_1 {
+  flex-grow: 3;
+  display: flex;
+   justify-content: center;
+   align-items: stretch;
+  flex-direction: row;
+  order: 2;
+}
+.body_row_2 {
+  display: flex;
   flex-grow: 1;
+  flex-direction: row;
+   justify-content: center;
+   align-items: stretch;
+  order: 3;
 }
-
-.title a {
-  color: #0070f3;
-  text-decoration: none;
-}
-
-.title a:hover,
-.title a:focus,
-.title a:active {
-  text-decoration: underline;
+.footer {
+  min-height: 20vh;
+  display: flex;
+  flex-direction: row;
+   justify-content: space-between;
+  align-items: stretch;
 }
 
 .title {
@@ -49,45 +92,13 @@
   line-height: 1.15;
   font-size: 4rem;
 }
-
-.title,
-.description {
-  text-align: center;
-}
-
-.description {
-  line-height: 1.5;
-  font-size: 1.5rem;
-}
-
-.code {
-  background: #fafafa;
-  border-radius: 5px;
-  padding: 0.75rem;
-  font-size: 1.1rem;
-  font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
-    Bitstream Vera Sans Mono, Courier New, monospace;
-}
-
-.grid {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  max-width: 800px;
-  margin-top: 3rem;
-}
-
 .card {
-  margin: 1rem;
-  padding: 1.5rem;
   text-align: left;
   color: inherit;
   text-decoration: none;
   border: 1px solid #eaeaea;
   border-radius: 10px;
   transition: color 0.15s ease, border-color 0.15s ease;
-  width: 45%;
 }
 
 .card:hover,
