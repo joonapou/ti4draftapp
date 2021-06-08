@@ -7,7 +7,6 @@ export default (req, res) => {
       res.status(401).json({message: 'Unable to auth'});
       return;
     }
-    console.log("api/me")
     let decoded;
     const token = req.cookies.token;
     if (token) {

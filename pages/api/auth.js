@@ -6,6 +6,26 @@ import prisma from '../../lib/prisma'
 
 const saltRounds = 10;
 
+
+export function getUserId(req){
+  const cookie = req.headers.cookie;
+  const token = cookie.substring(cookie.search("token=")+6)
+  if (typeof token !== 'undefined') {
+    var userId;
+    try {
+       userId = jwt.verify(token, jwtSecret)
+    } catch (err){
+      return {message: err.message}
+    }    
+    return userId
+    
+  } else {
+    return null;
+  }
+
+}
+
+
 async function findUser(name, callback) {
   const user = await prisma.user.findUnique({
     where: {
@@ -42,7 +62,6 @@ export default (req, res) => {
         authUser(name, password, user.password, function(err, match) {
           console.log(err, match)
           if (err) {
-            console.log("1")
             res.status(500).json({error: true, message: 'Auth Failed'});
           }
           if (match) {
@@ -56,7 +75,6 @@ export default (req, res) => {
             res.status(200).json({token});
             return;
           } else {
-            console.log("2")
             res.status(401).json({error: true, message: 'Auth Failed'});
             return;
           }

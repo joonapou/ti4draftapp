@@ -7,59 +7,62 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model GameGroup {
+model Group {
   id                Int                @id @default(autoincrement())
   GroupName         String
-  gameGroupFactions GameGroupFaction[]
+
   users           User[]
+  game Game?
 }
 
 
 model User {
   id     Int     @id @default(autoincrement())
-  name   String
-  email  String
-  pickOrder Int
-  custodian Boolean
+  name   String @unique
+  email  String?
+  pickOrder Int?
+  custodian Boolean?
+  password String
+  seatNumber Int?
 
   factionId Int?         @unique
   faction   Faction?     @relation(fields: [factionId], references: [id])
-  gameGroupId Int
-  gamegroup GameGroup @relation(fields: [gameGroupId], references: [id])
-  tokens Token[]
+  groupId Int?
+  group Group? @relation(fields: [groupId], references: [id])
 }
 
 model Faction {
   id                Int                @id @default(autoincrement())
   name              String
   url               String
-  gameGroupFactions GameGroupFaction[]
+
   user            User?
+  pickbans Pick[]
 }
 
-model GameGroupFaction {
+
+model Game {
+  id     Int     @id @default(autoincrement())
+  draftStarted Boolean? @default(false)
+  bansDone Boolean? @default(false)
+  picksDone Boolean? @default(false)
+  amountOfBans String?
+
+  userPicking String?
+  groupId Int?
+  group Group? @relation(fields: [groupId], references: [id])
+  pickbans Pick[]
+
+}
+
+model Pick {
   id          Int       @id @default(autoincrement())
-  banned      Boolean
-  picked      Boolean
-  factionId   Int
-  gameGroupId Int
-  faction     Faction   @relation(fields: [factionId], references: [id])
-  gameGroup   GameGroup @relation(fields: [gameGroupId], references: [id])
-}
+  banned      Boolean @default(false)
+  picked      Boolean @default(false)
 
-model Token {
-  id         Int       @id @default(autoincrement())
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  type       TokenType
-  emailToken String?   @unique
-  valid      Boolean   @default(true)
-  expiration DateTime
-  userId     Int
-  user       User      @relation(fields: [userId], references: [id])
-}
+  factionId   Int?
+  gameId Int?
+  faction     Faction?   @relation(fields: [factionId], references: [id])
+  game   Game? @relation(fields: [gameId], references: [id])
 
-enum TokenType {
-  EMAIL
-  API
 }

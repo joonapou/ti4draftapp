@@ -1,8 +1,8 @@
 import prisma from '../../lib/prisma'
-
+import {getGameGroupUsersForLoggedUser} from './users.js'
 
 export default async function handle(req, res) {
- const users = await prisma.user.findMany();
+  const users = await getGameGroupUsersForLoggedUser(req, res);
   const user_array = Object.values(users);
   var users_asc = [];
   var users_desc = [];
@@ -24,6 +24,5 @@ export default async function handle(req, res) {
   var sortable_users = users_asc.concat(users_desc);
   var sortable_users_obj = {};
     sortable_users_obj["pick_order"] = sortable_users
-
   res.status(200).json(sortable_users_obj)
-}
+  }

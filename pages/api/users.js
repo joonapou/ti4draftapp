@@ -5,6 +5,41 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const saltRounds = 10;
 
+import {getUserId} from './auth.js';
+
+
+
+export async function getGameGroupUsersForLoggedUser(req, res) {
+  var user;
+  user = getUserId(req)
+  var group_users = {};
+  const current_user = await prisma.user.findUnique({
+    where: {
+      id: user.userId
+    }
+  });
+  if (current_user.groupId !== null){
+   group_users = await prisma.user.findMany({
+    where: {
+      groupId: current_user.groupId
+    },
+    select : {
+      name: true,
+      groupId: true,
+      pickOrder: true,
+      factionId: true,
+      seatNumber: true,
+    }
+  });
+};
+ return group_users
+}
+
+
+
+
+
+
 async function findUser(name, callback) {
   const user = await prisma.user.findUnique({
     where: {
@@ -12,7 +47,6 @@ async function findUser(name, callback) {
     },
 
   });
-  console.log("user:", user)
   callback(user);
 }
 
@@ -25,7 +59,6 @@ async function createUser(name, password, callback) {
       password: hash
     }
   })
-    console.log("hash")
     callback(user)
   });
 }
@@ -37,7 +70,6 @@ export default async (req, res) => {
       assert.notEqual("", req.body.name, 'Name required');
       assert.notEqual("", req.body.password, 'Password required');
     } catch (bodyError) {
-      console.log("empty things")
       return res.status(403).json({error: true, message: bodyError.message});
     }
 

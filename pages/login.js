@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import Router from 'next/router';
 import cookie from 'js-cookie';
+import LoginPage from '../components/LoginPage.jsx'
 
 const Login = () => {
   const [loginError, setLoginError] = useState('');
@@ -37,23 +38,7 @@ const Login = () => {
       });
   }
   return (
-    <form onSubmit={handleSubmit}>
-      <p>Login</p>
-      <input
-        name="name"
-        type="name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-      <input
-        name="password"
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <input type="submit" value="Submit" />
-      {loginError && <p style={{color: 'red'}}>{loginError}</p>}
-    </form>
+    <LoginPage/>
   );
 };
 

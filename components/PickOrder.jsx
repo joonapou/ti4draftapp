@@ -7,6 +7,9 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import useSWR from "swr";
+
+const fetcher = (url) => fetch(url).then((r) => r.json());
 
 
 const useStyles = makeStyles({
@@ -15,9 +18,11 @@ const useStyles = makeStyles({
   },
 });
 
-export default function PickOrderTable({users}) {
+export default function PickOrderTable() {
   const classes = useStyles();
-  console.log(users)
+  const { data, error }  = useSWR('api/pickorder', fetcher)
+  if (error) return <div>failed to load</div>
+    if (!data) return <div>loading...</div>
   return (
     <TableContainer component={Paper}>
       <Table className={classes.table} aria-label="simple table">
@@ -28,12 +33,12 @@ export default function PickOrderTable({users}) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {users.map((row) => (
+          {data.pick_order.map((row) => (
             <TableRow key={row.name}>
               <TableCell component="th" scope="row">
-                {row.name}
+                {row[1]}
               </TableCell>
-              <TableCell align="left">{row.pickOrder}</TableCell>
+              <TableCell align="left">{row[0]}</TableCell>
             </TableRow>
           ))}
         </TableBody>

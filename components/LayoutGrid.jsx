@@ -3,6 +3,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import React from 'react';
 import Paper from '@material-ui/core/Paper';
 import PickOrder from '../components/PickOrder.jsx'
+import Picks from '../components/Picks.jsx'
+import PickScreen from '../components/PickScreen.jsx'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,28 +33,28 @@ function FormTopRow() {
       </React.Fragment>
     )
   }
-   function FormMidRow({users}) {
+   function FormMidRow() {
     const classes = useStyles();
     return (
       <React.Fragment>
         <Grid item xs={4}>
-          <Paper className={classes.paper}>Pick screen</Paper>
+          <Paper className={classes.paper}><PickScreen/></Paper>
         </Grid>
         <Grid item xs={4}>
           <Paper className={classes.paper}>Galaxy</Paper>
         </Grid>
         <Grid item xs={4}>
-          <Paper className={classes.paper}><PickOrder users={users} /> </Paper>
+          <Paper className={classes.paper}><PickOrder/> </Paper>
         </Grid>
       </React.Fragment>
     );
   }
-   function FormBottomRow({users}) {
+   function FormBottomRow() {
     const classes = useStyles();
     return (
       <React.Fragment>
-        <Grid item xs={4}>
-          <Paper className={classes.paper}>Picks</Paper>
+        <Grid item xs={8}>
+          <Paper className={classes.paper}><Picks/></Paper>
         </Grid>
         <Grid item xs={4}>
           <Paper className={classes.paper}>Item 3</Paper>
@@ -60,7 +62,7 @@ function FormTopRow() {
       </React.Fragment>
     );
   }
-export default function LayoutGrid({users}) {
+export default function LayoutGrid() {
 const classes = useStyles();
 return (
 
@@ -71,10 +73,10 @@ return (
           <FormTopRow />
         </Grid>
         <Grid container item xs={12} spacing={3}>
-          <FormMidRow users={users} />
+          <FormMidRow />
         </Grid>
         <Grid container item xs={12} spacing={3}>
-          <FormBottomRow users={users}/>
+          <FormBottomRow/>
         </Grid>
       </Grid>
     </div>

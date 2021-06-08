@@ -9,7 +9,6 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import useSWR from "swr";
-import fetch from "isomorphic-unfetch";
 
 
 const fetcher = (url) => fetch(url).then((r) => r.json())
@@ -27,7 +26,6 @@ function PicksTable() {
 
   if (error) return <div>failed to load</div>
     if (!data) return <div>loading...</div>
-    console.log(data.picks)
   return (
     <TableContainer component={Paper}>
       <Table className={classes.table} aria-label="simple table">
