@@ -24,7 +24,15 @@ export function getUserId(req){
   }
 
 }
+export function validateUser(req){
+  var user_info = getUserId(req);
 
+  if (typeof user_info.userId === 'number'){
+    return true
+  } else {
+    return false
+  }
+}
 
 async function findUser(name, callback) {
   const user = await prisma.user.findUnique({
@@ -60,7 +68,6 @@ export default (req, res) => {
         return;
       } else {
         authUser(name, password, user.password, function(err, match) {
-          console.log(err, match)
           if (err) {
             res.status(500).json({error: true, message: 'Auth Failed'});
           }
@@ -69,7 +76,7 @@ export default (req, res) => {
               {userId: user.id, name: user.name},
               jwtSecret,
               {
-                expiresIn: 3000, //50 minutes
+                expiresIn: 18000, //50 minutes
               },
             );
             res.status(200).json({token});

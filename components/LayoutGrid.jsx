@@ -4,7 +4,20 @@ import React from 'react';
 import Paper from '@material-ui/core/Paper';
 import PickOrder from '../components/PickOrder.jsx'
 import Picks from '../components/Picks.jsx'
-import PickScreen from '../components/PickScreen.jsx'
+import PickButton from '../components/PickButton.jsx'
+
+import useSWR from "swr";
+
+
+
+const fetcher = (url) => fetch(url).then((r) => r.json())
+const getData = (endpoint) => {
+  const { data, error } = useSWR(endpoint, fetcher, {revalidateOnFocus : false, revalidateOnMount: false})
+  return { data: data, error: error }
+
+}
+const getGameData = () => getData('api/game');
+const getBanData = () => getData('api/ban');
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,10 +48,11 @@ function FormTopRow() {
   }
    function FormMidRow() {
     const classes = useStyles();
+    const { data: gameInfo, error: gameInfoError }  = getGameData();
     return (
       <React.Fragment>
         <Grid item xs={4}>
-          <Paper className={classes.paper}><PickScreen/></Paper>
+          <Paper className={classes.paper}><PickButton gameinfo = {gameInfo} gameInfoError= {gameInfoError}/></Paper>
         </Grid>
         <Grid item xs={4}>
           <Paper className={classes.paper}>Galaxy</Paper>
@@ -64,6 +78,7 @@ function FormTopRow() {
   }
 export default function LayoutGrid() {
 const classes = useStyles();
+ 
 return (
 
 
@@ -73,7 +88,7 @@ return (
           <FormTopRow />
         </Grid>
         <Grid container item xs={12} spacing={3}>
-          <FormMidRow />
+          <FormMidRow/>
         </Grid>
         <Grid container item xs={12} spacing={3}>
           <FormBottomRow/>

@@ -13,6 +13,8 @@
     "bcrypt": "^5.0.1",
     "js-cookie": "^2.2.1",
     "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.21",
+    "madge": "^4.0.2",
     "material-components-web": "^11.0.0",
     "next": "^10.2.3",
     "react": "17.0.2",
