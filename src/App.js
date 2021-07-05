@@ -1,25 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import useSWR from 'swr';
+import cookie from 'js-cookie';
+import LayoutGrid from './LayoutGrid.jsx'
+import Button from '@material-ui/core/Button'
+import StartingPage from './StartingPage.jsx'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
 
-export default App;
+export default function App() {
+  // const {data, revalidate} = useSWR('/api/me', async function(args) {
+  //   const res = await fetch(args);
+  //   return res.json();
+  // });
+
+  // if (!data) return <h1>Loading...</h1>;
+  // let loggedIn = false;
+  // if (data.name) {
+  //   loggedIn = true;
+  // }
+  //   if (loggedIn){
+  //     return (
+  //     <LayoutGrid playername= {data.name} />
+  //     )
+  //   } else {
+      return (
+      <StartingPage/>
+      )
+    // }
+      
+    }
