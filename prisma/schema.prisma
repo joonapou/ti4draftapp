@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Group {
+  id                Int                @id @default(autoincrement())
+  GroupName         String
+
+  users           User[]
+  game Game?
+}
+
+
+model User {
+  id     Int     @id @default(autoincrement())
+  name   String @unique
+  email  String?
+  pickOrder Int?
+  custodian Boolean?
+  password String
+  seatNumber Int?
+  banningDone Boolean @default(false)
+
+  factionId Int?         @unique
+  faction   Faction?     @relation(fields: [factionId], references: [id])
+  groupId Int?
+  group Group? @relation(fields: [groupId], references: [id])
+  pick Pick?
+  bans Ban[]
+}
+
+model Faction {
+  id                Int                @id @default(autoincrement())
+  name              String @unique
+  url               String
+
+  user            User?
+  picks Pick[]
+  bans Ban[]
+}
+
+
+model Game {
+  id     Int     @id @default(autoincrement())
+  draftStarted Boolean? @default(false)
+  bansDone Boolean? @default(false)
+  picksDone Boolean? @default(false)
+  amountOfBans String?
+
+  userPicking String?
+  groupId Int?
+  group Group? @relation(fields: [groupId], references: [id])
+  picks Pick[]
+  bans Ban[]
+
+}
+
+model Pick {
+  id          Int       @id @default(autoincrement())
+  picked      Boolean @default(false)
+
+  factionId   Int?
+  gameId Int?
+  faction     Faction?   @relation(fields: [factionId], references: [id])
+  game   Game? @relation(fields: [gameId], references: [id])
+  userId Int?
+  user User? @relation(fields: [userId], references: [id])
+
+}
+
+model Ban {
+  id          Int       @id @default(autoincrement())
+  banned      Boolean @default(false)
+
+  factionId   Int?
+  gameId Int?
+  userId Int?
+  user User? @relation(fields: [userId], references: [id])
+  faction     Faction?   @relation(fields: [factionId], references: [id])
+  game   Game? @relation(fields: [gameId], references: [id])
+
+}
