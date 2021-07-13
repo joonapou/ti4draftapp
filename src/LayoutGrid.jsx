@@ -1,23 +1,25 @@
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
-import React from 'react';
+import React, { Component } from 'react';
 import Paper from '@material-ui/core/Paper';
 import PickOrder from './PickOrder.jsx'
 import Picks from './Picks.jsx'
 import PickButton from './PickButton.jsx'
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/styles';
 
 import useSWR from "swr";
 
 
 
 const fetcher = (url) => fetch(url).then((r) => r.json())
-const GetData = (endpoint) => {
-  const { data, error } = useSWR(endpoint, fetcher, {revalidateOnFocus : false, revalidateOnMount: false})
-  return { data: data, error: error }
+// const GetData = (endpoint) => {
+//   const { data, error } = useSWR(endpoint, fetcher, {revalidateOnFocus : false, revalidateOnMount: false})
+//   return { data: data, error: error }
 
-}
-const getGameData = () => GetData('api/game');
-const getBanData = () => GetData('api/ban');
+// }
+// const getGameData = () => GetData('api/game');
+// const getBanData = () => GetData('api/ban');
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,6 +31,11 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.text.secondary,
   },
 }));
+const styles = theme => ({
+  root: {
+    flexGrow: 1,
+  },
+});
 
 function FormTopRow() {
   const classes = useStyles();
@@ -48,11 +55,11 @@ function FormTopRow() {
   }
    function FormMidRow() {
     const classes = useStyles();
-    const { data: gameInfo, error: gameInfoError }  = getGameData();
+    //const { data: gameInfo, error: gameInfoError }  = getGameData();
     return (
       <React.Fragment>
         <Grid item xs={4}>
-          <Paper className={classes.paper}><PickButton gameinfo = {gameInfo} gameInfoError= {gameInfoError}/></Paper>
+          <Paper className={classes.paper}><PickButton/></Paper>
         </Grid>
         <Grid item xs={4}>
           <Paper className={classes.paper}>Galaxy</Paper>
@@ -64,6 +71,7 @@ function FormTopRow() {
     );
   }
    function FormBottomRow() {
+    console.log("FormBottomRow")
     const classes = useStyles();
     return (
       <React.Fragment>
@@ -76,13 +84,12 @@ function FormTopRow() {
       </React.Fragment>
     );
   }
-export default function LayoutGrid() {
-const classes = useStyles();
- 
+export class LayoutGrid extends Component {
+ render(){
+  console.log("LayoutGrid")
+  const { classes } = this.props;
 return (
-
-
-    <div className={classes.root}>
+    <div className='{classes.root}'>
       <Grid container spacing={1}>
         <Grid container item xs={12} spacing={3}>
           <FormTopRow />
@@ -98,3 +105,8 @@ return (
 
 )
 }
+}
+LayoutGrid.propTypes = {
+  classes: PropTypes.object.isRequired
+}
+export default withStyles(styles)(LayoutGrid);

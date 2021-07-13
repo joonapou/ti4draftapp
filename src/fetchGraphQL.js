@@ -1,12 +1,13 @@
 // your-app-name/src/fetchGraphQL.js
 async function fetchGraphQL(text, variables) {
-  const HASURA_ADMIN_SECRET = process.env.HASURA_ADMIN_SECRET;
+  const HASURA_ADMIN_SECRET = process.env.REACT_APP_HASURA_ADMIN_SECRET;
 
   // Fetch data from GitHub's GraphQL API:
+  console.log(process.env)
   const response = await fetch('https://key-grizzly-59.hasura.app/v1/graphql', {
     method: 'POST',
     headers: {
-      'x-hasura-admin-secret': ${HASURA_ADMIN_SECRET},
+      'x-hasura-admin-secret': `${HASURA_ADMIN_SECRET}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({

@@ -9,23 +9,39 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import useSWR from "swr";
-
-
-const fetcher = (url) => fetch(url).then((r) => r.json())
-
-
+import RelayEnvironment from './RelayEnvironment';
+import graphql from 'babel-plugin-relay/macro';
+import {Suspense} from 'react';
+import {
+  RelayEnvironmentProvider,
+  loadQuery,
+  usePreloadedQuery,
+} from 'react-relay/hooks';
+const PicksQuery = graphql`
+  query PicksQuery {
+  User {
+    user_id
+    name
+    pickOrder
+    user_id
+    Faction {
+      name
+    }
+  }
+}
+`;
+const preloadedQuery = loadQuery(RelayEnvironment, PicksQuery, {
+  /* query variables */
+});
 const useStyles = makeStyles({
   table: {
     minWidth: 300,
   },
 });
 
-function PicksTable() {
+function PicksTableChild(props) {
+  const data = usePreloadedQuery(PicksQuery, props.preloadedQuery);
   const classes = useStyles();
-  const { data, error }  = useSWR('api/picks', fetcher)
-
-  if (error) return <div>failed to load</div>
-    if (!data) return <div>loading...</div>
   return (
     <TableContainer component={Paper}>
       <Table className={classes.table} aria-label="simple table">
@@ -37,11 +53,11 @@ function PicksTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.picks.map((row) => (
-            <TableRow key={row[0]}>
-              <TableCell component="th" scope="row">{row[0]}</TableCell>
-              <TableCell align="left">{row[1]}</TableCell>
-              <TableCell align="left">{row[2]}</TableCell>
+          {data.User.map((row) => (
+            <TableRow key={row.user_id}>
+              <TableCell component="th" scope="row">{row.name}</TableCell>
+              <TableCell align="left">{row.Faction == null ? "No faction selected" : row.Faction.name}</TableCell>
+              <TableCell align="left">{row.seatNumber == null ? "No seat selected" : row.seatNumber}</TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -50,4 +66,12 @@ function PicksTable() {
   );
 }
 
-export default PicksTable;
+export default function PicksTable(props) {
+  return (
+  <RelayEnvironmentProvider environment={RelayEnvironment}>
+    <Suspense fallback={'Loading...'}>
+      <PicksTableChild preloadedQuery={preloadedQuery} />
+    </Suspense>
+  </RelayEnvironmentProvider>
+  );
+}
