@@ -274,13 +274,11 @@ export type Faction_on_conflict = {|
   where?: ?Faction_bool_exp,
 |};
 export type InitGameBansMutationVariables = {|
-  object: Ban_insert_input
+  objects: $ReadOnlyArray<Ban_insert_input>
 |};
 export type InitGameBansMutationResponse = {|
-  +insert_Ban_one: ?{|
-    +ban_id: number,
-    +banned: boolean,
-    +userId: ?number,
+  +insert_Ban: ?{|
+    +affected_rows: number
   |}
 |};
 export type InitGameBansMutation = {|
@@ -292,12 +290,10 @@ export type InitGameBansMutation = {|
 
 /*
 mutation InitGameBansMutation(
-  $object: Ban_insert_input!
+  $objects: [Ban_insert_input!]!
 ) {
-  insert_Ban_one(object: $object) {
-    ban_id
-    banned
-    userId
+  insert_Ban(objects: $objects) {
+    affected_rows
   }
 }
 */
@@ -307,7 +303,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "object"
+    "name": "objects"
   }
 ],
 v1 = [
@@ -316,34 +312,20 @@ v1 = [
     "args": [
       {
         "kind": "Variable",
-        "name": "object",
-        "variableName": "object"
+        "name": "objects",
+        "variableName": "objects"
       }
     ],
-    "concreteType": "Ban",
+    "concreteType": "Ban_mutation_response",
     "kind": "LinkedField",
-    "name": "insert_Ban_one",
+    "name": "insert_Ban",
     "plural": false,
     "selections": [
       {
         "alias": null,
         "args": null,
         "kind": "ScalarField",
-        "name": "ban_id",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "banned",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "userId",
+        "name": "affected_rows",
         "storageKey": null
       }
     ],
@@ -368,16 +350,16 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "c1b6d3d7a0b278b56c287ca467d5e240",
+    "cacheID": "24eaa34209d51f478033fbc1b148c017",
     "id": null,
     "metadata": {},
     "name": "InitGameBansMutation",
     "operationKind": "mutation",
-    "text": "mutation InitGameBansMutation(\n  $object: Ban_insert_input!\n) {\n  insert_Ban_one(object: $object) {\n    ban_id\n    banned\n    userId\n  }\n}\n"
+    "text": "mutation InitGameBansMutation(\n  $objects: [Ban_insert_input!]!\n) {\n  insert_Ban(objects: $objects) {\n    affected_rows\n  }\n}\n"
   }
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = 'f2aa020ad954dc66e1c26b0c847a5a39';
+(node/*: any*/).hash = '0ed1ffc1e0b3b6c6d19fdb4626b79c77';
 
 module.exports = node;

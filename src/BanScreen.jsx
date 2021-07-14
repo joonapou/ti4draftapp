@@ -14,11 +14,13 @@ import graphql from 'babel-plugin-relay/macro';
 import RelayEnvironment from './RelayEnvironment';
 import {Suspense} from 'react';
 import InitGame from './helpers/InitGame';
+import type {Environment} from 'react-relay'
 import {
   RelayEnvironmentProvider,
   loadQuery,
   usePreloadedQuery,
-  useLazyLoadQuery
+  useLazyLoadQuery,
+  commitMutation
 } from 'react-relay/hooks';
 const BanScreenInfoQuery = graphql`
   query BanScreenInfoQuery {
@@ -28,17 +30,19 @@ const BanScreenInfoQuery = graphql`
   }
 }`;
 const BanScreenQuery = graphql`
-  query BanScreenQuery {
-  Ban {
-    ban_id
-    banned
+  query BanScreenQuery($auth0id: String) {
+  Ban(where: {User: {auth0_id: {_eq: $auth0id}}}) {
+    User {
+      user_id
+      name
+    }
     Faction {
       name
+      faction_id
     }
-    User {
-      name
-      }
-    }
+    banned
+    ban_id
+  }
 }
 `;
 const BanScreenInitQuery = graphql`
@@ -49,9 +53,29 @@ const BanScreenInitQuery = graphql`
     }
 }
 `;
-
+const BanScreenMutation = graphql`
+  mutation BanScreenMutation($banId: Int, $banned: Boolean) {
+  update_Ban(_set: {banned: $banned}, where: {ban_id: {_eq: $banId}}) {
+    returning {
+      ban_id
+      banned
+    }
+  }
+}
+`
+function ModifyBan(environment: Environment,
+  objects) {
+  console.log("objects", objects)
+  return commitMutation(environment, {
+    mutation: BanScreenMutation,
+    variables: objects,
+    onCompleted: response => {} /* Mutation completed */,
+    onError: error => {console.log(error)} /* Mutation errored */,
+  });
+}
+var bans2 = [];
 const preloadedQuery = loadQuery(RelayEnvironment, BanScreenQuery, {
-  /* query variables */
+  auth0id: localStorage.getItem('auth0:id_token:sub')
 });
 
 const useStyles = makeStyles((theme) => ({
@@ -64,20 +88,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 function HandleBans (props) {
   const data = usePreloadedQuery(BanScreenQuery, props.preloadedQuery)
-  // const factions = useLazyLoadQuery(BanScreenInitQuery);
-  // console.log(factions)
-  // if (data.Ban.length == 0){
-  //   //bans haven't been init yet
-  //   for (var i = 0; i < factions.Faction; ++i){
-
-  //   }
-    
-  // }
   return data.Ban;
 }
 function handleSubmit(e) {
     e.preventDefault();
-    console.log("Submitted")
+    for (var a = 0; a < bans2.length; ++a){
+      var element = document.getElementById(bans2[a].ban_id)
+      console.log("banned", element.checked, "ban_id", element.id )
+      ModifyBan(RelayEnvironment, {banId: element.id, banned: element.checked})
+
+    }
+    var i = document.getElementById('179')
 }
 function BanScreenChild(props, gameInfo) {
 //   if (!bans ) return <div>loading...</div>
@@ -121,17 +142,17 @@ function BanScreenChild(props, gameInfo) {
 // }
 //const data = usePreloadedQuery(BanScreenQuery, props.preloadedQuery)
  const bans = HandleBans(props);
+ bans2 = bans;
  const banInfo = useLazyLoadQuery(BanScreenInfoQuery);
 const classes = useStyles();
-InitGame();
-console.log("gamee", bans)
+//InitGame();
 return (
        // Ban Faction
       <Container className={classes.container} maxWidth="xs">
        <form classes={classes.root} noValidate autoComplete="off" onSubmit={handleSubmit}>
           <Grid>
             <FormControl component="fieldset" className={classes.formControl}>
-            <FormGroup>
+            <FormGroup id="banform">
             <Typography variant="h6" className={classes.title}>
                 Ban {banInfo.Game[0].bansLower} factions
               </Typography>
@@ -139,8 +160,8 @@ return (
               </Typography>
               {bans.map((row) => (
            <FormControlLabel
-            control={<Checkbox name={row.banId} value={row.factionName}/>}
-            label={row.factionName}
+            control={<Checkbox id={row.ban_id} value={row.Faction.name}/>}
+            label={row.Faction.faction_id}
           />
           ))}
             </FormGroup>

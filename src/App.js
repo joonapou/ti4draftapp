@@ -117,7 +117,6 @@ export class App extends Component {
 
   componentDidMount() {
     if (this.props.auth.isAuthenticated()) {
-      console.log("compo")
       //this.props.history.push('/game');
       //return (<Redirect to='/game' />)
     }
