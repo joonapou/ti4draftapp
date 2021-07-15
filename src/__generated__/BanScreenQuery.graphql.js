@@ -13,17 +13,19 @@ export type BanScreenQueryVariables = {|
 |};
 export type BanScreenQueryResponse = {|
   +Ban: $ReadOnlyArray<{|
-    +User: ?{|
-      +user_id: number,
-      +name: string,
-    |},
     +Faction: ?{|
       +name: string,
       +faction_id: number,
+      +url: string,
     |},
     +banned: boolean,
     +ban_id: number,
-  |}>
+  |}>,
+  +User: $ReadOnlyArray<{|
+    +banningDone: ?boolean,
+    +name: string,
+    +user_id: number,
+  |}>,
 |};
 export type BanScreenQuery = {|
   variables: BanScreenQueryVariables,
@@ -37,16 +39,18 @@ query BanScreenQuery(
   $auth0id: String
 ) {
   Ban(where: {User: {auth0_id: {_eq: $auth0id}}}) {
-    User {
-      user_id
-      name
-    }
     Faction {
       name
       faction_id
+      url
     }
     banned
     ban_id
+  }
+  User(where: {auth0_id: {_eq: $auth0id}}) {
+    banningDone
+    name
+    user_id
   }
 }
 */
@@ -59,33 +63,34 @@ var v0 = [
     "name": "auth0id"
   }
 ],
-v1 = {
+v1 = [
+  {
+    "fields": [
+      {
+        "kind": "Variable",
+        "name": "_eq",
+        "variableName": "auth0id"
+      }
+    ],
+    "kind": "ObjectValue",
+    "name": "auth0_id"
+  }
+],
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v2 = [
+v3 = [
   {
     "alias": null,
     "args": [
       {
         "fields": [
           {
-            "fields": [
-              {
-                "fields": [
-                  {
-                    "kind": "Variable",
-                    "name": "_eq",
-                    "variableName": "auth0id"
-                  }
-                ],
-                "kind": "ObjectValue",
-                "name": "auth0_id"
-              }
-            ],
+            "fields": (v1/*: any*/),
             "kind": "ObjectValue",
             "name": "User"
           }
@@ -102,36 +107,24 @@ v2 = [
       {
         "alias": null,
         "args": null,
-        "concreteType": "User",
-        "kind": "LinkedField",
-        "name": "User",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "user_id",
-            "storageKey": null
-          },
-          (v1/*: any*/)
-        ],
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
         "concreteType": "Faction",
         "kind": "LinkedField",
         "name": "Faction",
         "plural": false,
         "selections": [
-          (v1/*: any*/),
+          (v2/*: any*/),
           {
             "alias": null,
             "args": null,
             "kind": "ScalarField",
             "name": "faction_id",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "url",
             "storageKey": null
           }
         ],
@@ -153,6 +146,38 @@ v2 = [
       }
     ],
     "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": [
+      {
+        "fields": (v1/*: any*/),
+        "kind": "ObjectValue",
+        "name": "where"
+      }
+    ],
+    "concreteType": "User",
+    "kind": "LinkedField",
+    "name": "User",
+    "plural": true,
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "banningDone",
+        "storageKey": null
+      },
+      (v2/*: any*/),
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "user_id",
+        "storageKey": null
+      }
+    ],
+    "storageKey": null
   }
 ];
 return {
@@ -161,7 +186,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "BanScreenQuery",
-    "selections": (v2/*: any*/),
+    "selections": (v3/*: any*/),
     "type": "query_root",
     "abstractKey": null
   },
@@ -170,19 +195,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "BanScreenQuery",
-    "selections": (v2/*: any*/)
+    "selections": (v3/*: any*/)
   },
   "params": {
-    "cacheID": "aa3816e4252b2efe9f7ffa34a0367887",
+    "cacheID": "d2313446308e32b5f350a4a4fcedf9be",
     "id": null,
     "metadata": {},
     "name": "BanScreenQuery",
     "operationKind": "query",
-    "text": "query BanScreenQuery(\n  $auth0id: String\n) {\n  Ban(where: {User: {auth0_id: {_eq: $auth0id}}}) {\n    User {\n      user_id\n      name\n    }\n    Faction {\n      name\n      faction_id\n    }\n    banned\n    ban_id\n  }\n}\n"
+    "text": "query BanScreenQuery(\n  $auth0id: String\n) {\n  Ban(where: {User: {auth0_id: {_eq: $auth0id}}}) {\n    Faction {\n      name\n      faction_id\n      url\n    }\n    banned\n    ban_id\n  }\n  User(where: {auth0_id: {_eq: $auth0id}}) {\n    banningDone\n    name\n    user_id\n  }\n}\n"
   }
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = '364e48d6b0c92f2696027fabcebe2565';
+(node/*: any*/).hash = '2ad6f097fa8245ecd29dcd14bd3b41f4';
 
 module.exports = node;
