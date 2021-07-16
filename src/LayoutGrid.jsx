@@ -7,6 +7,7 @@ import Picks from './Picks.jsx'
 import PickButton from './PickButton.jsx'
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/styles';
+import Galaxy from './Galaxy.js'
 
 import useSWR from "swr";
 
@@ -37,22 +38,22 @@ const styles = theme => ({
   },
 });
 
-function FormTopRow() {
-  const classes = useStyles();
-    return (
-      <React.Fragment>
-        <Grid item xs={4}>
-          <Paper className={classes.paper}>Item 1</Paper>
-        </Grid>
-        <Grid item xs={4}>
-          <Paper className={classes.paper}>Item 2</Paper>
-        </Grid>
-        <Grid item xs={4}>
-          <Paper className={classes.paper}>Login Info</Paper>
-        </Grid>
-      </React.Fragment>
-    )
-  }
+// function FormTopRow() {
+//   const classes = useStyles();
+//     return (
+//       <React.Fragment>
+//         <Grid item xs={4}>
+//           <Paper className={classes.paper}>Item 1</Paper>
+//         </Grid>
+//         <Grid item xs={4}>
+//           <Paper className={classes.paper}>Item 2</Paper>
+//         </Grid>
+//         <Grid item xs={4}>
+//           <Paper className={classes.paper}>Login Info</Paper>
+//         </Grid>
+//       </React.Fragment>
+//     )
+//   }
    function FormMidRow() {
     const classes = useStyles();
     //const { data: gameInfo, error: gameInfoError }  = getGameData();
@@ -62,7 +63,7 @@ function FormTopRow() {
           <Paper className={classes.paper}><PickButton/></Paper>
         </Grid>
         <Grid item xs={4}>
-          <Paper className={classes.paper}>Galaxy</Paper>
+          <Paper className={classes.paper}><Galaxy/></Paper>
         </Grid>
         <Grid item xs={4}>
           <Paper className={classes.paper}><PickOrder/> </Paper>
@@ -79,7 +80,7 @@ function FormTopRow() {
           <Paper className={classes.paper}><Picks/></Paper>
         </Grid>
         <Grid item xs={4}>
-          <Paper className={classes.paper}>Item 3</Paper>
+          <Paper className={classes.paper}>User Info</Paper>
         </Grid>
       </React.Fragment>
     );
@@ -91,9 +92,6 @@ export class LayoutGrid extends Component {
 return (
     <div className='{classes.root}'>
       <Grid container spacing={1}>
-        <Grid container item xs={12} spacing={3}>
-          <FormTopRow />
-        </Grid>
         <Grid container item xs={12} spacing={3}>
           <FormMidRow/>
         </Grid>

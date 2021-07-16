@@ -86,7 +86,6 @@ function RunMutation(environment: Environment,
   });
 }
 
-var bans = [];
 const preloadedQuery = loadQuery(RelayEnvironment, BanScreenQuery, {
   auth0id: localStorage.getItem('auth0:id_token:sub')
 });
@@ -104,16 +103,16 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function handleSubmit(e) {
-    e.preventDefault();
+function handleSubmit(e, bans, refresh) {
+    //e.preventDefault();
     for (var a = 0; a < bans.length; ++a){
       var element = document.getElementById(bans[a].ban_id)
       console.log("banned", element.checked, "ban_id", element.id )
       RunMutation(RelayEnvironment, {banId: element.id, banned: element.checked}, BanScreenMutation)
-
+      refresh();
     }
     var auth0id = localStorage.getItem('auth0:id_token:sub');
-   // RunMutation(RelayEnvironment, {auth0id: auth0id, banningDone: true}, BanScreenUserMutation)
+    RunMutation(RelayEnvironment, {auth0id: auth0id, banningDone: true}, BanScreenUserMutation)
 }
 function handleClick(e, row){
   e.preventDefault();
@@ -121,6 +120,10 @@ function handleClick(e, row){
   window.open(row.Faction.url)
 }
 function BanScreenChild(props, gameInfo) {
+  const [value,setValue] = useState();
+  const refresh = () => {
+    setValue({});
+  }
 //   if (!bans ) return <div>loading...</div>
 //   const [factionbans, dispatch] = useReducer((state, action) => {
 //       switch (action.type) {
@@ -162,7 +165,6 @@ function BanScreenChild(props, gameInfo) {
 // }
 //const data = usePreloadedQuery(BanScreenQuery, props.preloadedQuery)
  const data = usePreloadedQuery(BanScreenQuery, props.preloadedQuery)
- bans = data.Ban;
  const banInfo = useLazyLoadQuery(BanScreenInfoQuery);
 const classes = useStyles();
 //InitGame();
@@ -172,7 +174,7 @@ return (
       <Container className={classes.container} maxWidth="xs">
       <Grid container>
 
-       <form classes={classes.root} noValidate autoComplete="off" onSubmit={handleSubmit}>
+       <form classes={classes.root} noValidate autoComplete="off" onSubmit={(e) => handleSubmit(e, data.Ban, refresh)}>
           <Grid item>
             <FormControl component="fieldset" className={classes.formControl}>
             <FormGroup id="banform">
@@ -181,7 +183,7 @@ return (
               </Typography>
               <Typography variant="h6" className={classes.title}>
               </Typography>
-              {bans.map((row) => (
+              {data.Ban.map((row) => (
                 <span>
            <FormControlLabel
             control={<Checkbox id={row.ban_id} value={row.Faction.name}/>}

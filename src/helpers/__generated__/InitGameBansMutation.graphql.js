@@ -8,12 +8,12 @@
 
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
-export type Ban_constraint = "Ban_pkey" | "%future added value";
+export type Ban_constraint = "Ban_factionId_key" | "Ban_pkey" | "%future added value";
 export type Ban_update_column = "ban_id" | "banned" | "factionId" | "gameId" | "userId" | "%future added value";
 export type Faction_constraint = "Faction_id_key" | "Faction_pkey1" | "%future added value";
 export type Faction_update_column = "faction_id" | "name" | "url" | "%future added value";
 export type Game_constraint = "Game_groupId_unique" | "Game_pkey" | "%future added value";
-export type Game_update_column = "amountOfBans" | "bansDone" | "bansLower" | "bansUpper" | "draftStarted" | "game_id" | "groupId" | "picksDone" | "userPicking" | "%future added value";
+export type Game_update_column = "amountOfBans" | "bansDone" | "bansLower" | "bansUpper" | "draftStarted" | "game_id" | "groupId" | "hsLabels" | "mapString" | "picksDone" | "userPicking" | "%future added value";
 export type Group_constraint = "Group_pkey" | "%future added value";
 export type Group_update_column = "GroupName" | "group_id" | "%future added value";
 export type Pick_constraint = "Pick_pkey" | "Pick_userId_unique" | "%future added value";
@@ -102,6 +102,8 @@ export type Game_bool_exp = {|
   draftStarted?: ?Boolean_comparison_exp,
   game_id?: ?Int_comparison_exp,
   groupId?: ?Int_comparison_exp,
+  hsLabels?: ?String_comparison_exp,
+  mapString?: ?String_comparison_exp,
   picksDone?: ?Boolean_comparison_exp,
   userPicking?: ?String_comparison_exp,
 |};
@@ -206,6 +208,8 @@ export type Game_insert_input = {|
   draftStarted?: ?boolean,
   game_id?: ?number,
   groupId?: ?number,
+  hsLabels?: ?string,
+  mapString?: ?string,
   picksDone?: ?boolean,
   userPicking?: ?string,
 |};

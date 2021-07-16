@@ -13,7 +13,7 @@ export type BanScreenQueryVariables = {|
 |};
 export type BanScreenQueryResponse = {|
   +Ban: $ReadOnlyArray<{|
-    +Faction: ?{|
+    +Faction: {|
       +name: string,
       +faction_id: number,
       +url: string,
