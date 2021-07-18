@@ -28,7 +28,9 @@ function GalaxyChild(props) {
 	const [imageurl, setImageUrl] = useState("https://c.files.bbci.co.uk/16620/production/_91408619_55df76d5-2245-41c1-8031-07a4da3f313f.jpg");
 	const data = usePreloadedQuery(GalaxyQuery, props.preloadedQuery);
 	var urlstring = `/map?tiles=${data.Game[0].mapString}&hslabels=${data.Game[0].hsLabels}`
-	fetch(urlstring,{
+	var localUrl;
+	if (imageurl.search('localhost') === -1){
+		fetch(urlstring,{
 		headers: {
 			'Access-Control-Allow-Origin': 'https://ti4-card-images.appspot.com',
 			'Origin': 'https://ti4-card-images.appspot.com',
@@ -39,14 +41,18 @@ function GalaxyChild(props) {
 	})
 		.then(response => response.blob())
 		.then(image => {
-			const localUrl = URL.createObjectURL(image);
+			localUrl = URL.createObjectURL(image);
 			setImageUrl(localUrl);
-			console.log(localUrl)
 
 		})
 
+
+	}
+
+	
+
 		return(
-   <div class="galaxy">
+   <div>
       <img src={imageurl} id="galaxyimg" max-width="100%"/>
    </div>
 )

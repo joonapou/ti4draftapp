@@ -109,10 +109,12 @@ function handleSubmit(e, bans, refresh) {
       var element = document.getElementById(bans[a].ban_id)
       console.log("banned", element.checked, "ban_id", element.id )
       RunMutation(RelayEnvironment, {banId: element.id, banned: element.checked}, BanScreenMutation)
-      refresh();
+      
     }
+
     var auth0id = localStorage.getItem('auth0:id_token:sub');
     RunMutation(RelayEnvironment, {auth0id: auth0id, banningDone: true}, BanScreenUserMutation)
+    refresh();
 }
 function handleClick(e, row){
   e.preventDefault();

@@ -21,6 +21,7 @@ import BanScreen from './BanScreen.jsx'
 import Paper from '@material-ui/core/Paper';
 import graphql from 'babel-plugin-relay/macro';
 import RelayEnvironment from './RelayEnvironment';
+import PickScreen from './PickScreen.jsx'
 import {Suspense} from 'react';
 import {
   RelayEnvironmentProvider,
@@ -93,13 +94,8 @@ function PickButtonChild(props) {
       } else {
         return (
         // Pick faction
-      <Container className={classes.container} maxWidth="xs">
-          <Grid>
-            <Typography variant="h6" className={classes.title}>
-              Pick screen
-            </Typography>
-          </Grid>
-        </Container>
+            <PickScreen/>
+
       )
       }
     } else {

@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/styles';
 import Galaxy from './Galaxy.js'
 
+import Button from '@material-ui/core/Button';
 import useSWR from "swr";
 
 
@@ -24,7 +25,8 @@ const fetcher = (url) => fetch(url).then((r) => r.json())
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    flexGrow: 1,
+    height: '100%',
+    width: '100%'
   },
   paper: {
     padding: theme.spacing(1),
@@ -32,28 +34,7 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.text.secondary,
   },
 }));
-const styles = theme => ({
-  root: {
-    flexGrow: 1,
-  },
-});
 
-// function FormTopRow() {
-//   const classes = useStyles();
-//     return (
-//       <React.Fragment>
-//         <Grid item xs={4}>
-//           <Paper className={classes.paper}>Item 1</Paper>
-//         </Grid>
-//         <Grid item xs={4}>
-//           <Paper className={classes.paper}>Item 2</Paper>
-//         </Grid>
-//         <Grid item xs={4}>
-//           <Paper className={classes.paper}>Login Info</Paper>
-//         </Grid>
-//       </React.Fragment>
-//     )
-//   }
    function FormMidRow() {
     const classes = useStyles();
     //const { data: gameInfo, error: gameInfoError }  = getGameData();
@@ -65,14 +46,13 @@ const styles = theme => ({
         <Grid item xs={4}>
           <Paper className={classes.paper}><Galaxy/></Paper>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={4} >
           <Paper className={classes.paper}><PickOrder/> </Paper>
         </Grid>
       </React.Fragment>
     );
   }
    function FormBottomRow() {
-    console.log("FormBottomRow")
     const classes = useStyles();
     return (
       <React.Fragment>
@@ -85,26 +65,39 @@ const styles = theme => ({
       </React.Fragment>
     );
   }
-export class LayoutGrid extends Component {
- render(){
-  console.log("LayoutGrid")
-  const { classes } = this.props;
+// export class LayoutGrid extends Component {
+//  render(){
+//   const { classes } = this.props;
+// return (
+//     <div className={classes.root}>
+//         <Grid container  spacing={3}>
+//           <FormMidRow/>
+//         </Grid>
+//         <Grid container spacing={3}>
+//           <FormBottomRow/>
+//         </Grid>
+//     </div>
+
+// )
+// }
+// }
+// LayoutGrid.propTypes = {
+//   classes: PropTypes.object.isRequired
+// }
+// export default withStyles(styles)(LayoutGrid);
+
+
+export default function LayoutGrid() {
+ const classes = useStyles();
 return (
-    <div className='{classes.root}'>
-      <Grid container spacing={1}>
-        <Grid container item xs={12} spacing={3}>
+    <div className={classes.root}>
+        <Grid container spacing={3}>
           <FormMidRow/>
         </Grid>
-        <Grid container item xs={12} spacing={3}>
+        <Grid container spacing={3}>
           <FormBottomRow/>
         </Grid>
-      </Grid>
     </div>
 
 )
 }
-}
-LayoutGrid.propTypes = {
-  classes: PropTypes.object.isRequired
-}
-export default withStyles(styles)(LayoutGrid);
