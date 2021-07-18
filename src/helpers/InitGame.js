@@ -128,6 +128,8 @@ export default function InitGame(){
 	for (var b = 0; b < factionsdata.length; ++b){
 		temp_faction_array.push(factionsdata[b].faction_id)
 	}
+	temp_faction_array.sort()
+	console.log("before:" ,temp_faction_array.length)
 	var bans = {};
 	for (var i = 0; i < userdata.length; ++i){
 		var user_ban_array = [];
@@ -147,6 +149,8 @@ export default function InitGame(){
 	 
 	}
 	var mutation_datas = [];
+	console.log("after",temp_faction_array.length)
+	var temp = [];
 	for (const [key, value] of Object.entries(user_ban_data)){
 		for (var x = 0; x < value.length; ++x){
 			mutation_data = {
@@ -156,10 +160,14 @@ export default function InitGame(){
 			gameId: 1
 
 		}
+		temp.push(value[x])
 		mutation_datas.push(mutation_data)
 
 	}
+
 	}
+	temp.sort()
+	//console.log(temp)
 	//mutation_datas = [{gameId: 1, userId:1, banned: false,factionId: 172}, {banned:false, gameId: 1, userId:1, factionId: 173}]
 	insertBan(RelayEnvironment, mutation_datas);
 	//localStorage.setItem('testdata': mutation_datas)
