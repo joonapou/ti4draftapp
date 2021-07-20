@@ -13,7 +13,7 @@ export type Ban_update_column = "ban_id" | "banned" | "factionId" | "gameId" | "
 export type Faction_constraint = "Faction_id_key" | "Faction_pkey1" | "%future added value";
 export type Faction_update_column = "faction_id" | "name" | "url" | "%future added value";
 export type Game_constraint = "Game_groupId_unique" | "Game_pkey" | "%future added value";
-export type Game_update_column = "amountOfBans" | "bansDone" | "bansLower" | "bansUpper" | "draftStarted" | "game_id" | "groupId" | "hsLabels" | "mapString" | "picksDone" | "userPicking" | "%future added value";
+export type Game_update_column = "amountOfBans" | "availableSeats" | "bansDone" | "bansLower" | "bansUpper" | "draftStarted" | "game_id" | "groupId" | "hsLabels" | "mapString" | "picksDone" | "userPicking" | "%future added value";
 export type Group_constraint = "Group_pkey" | "%future added value";
 export type Group_update_column = "GroupName" | "group_id" | "%future added value";
 export type Pick_constraint = "Pick_pkey" | "Pick_userId_unique" | "%future added value";
@@ -35,6 +35,7 @@ export type Faction_obj_rel_insert_input = {|
   on_conflict?: ?Faction_on_conflict,
 |};
 export type Faction_insert_input = {|
+  Ban?: ?Ban_obj_rel_insert_input,
   Bans?: ?Ban_arr_rel_insert_input,
   Picks?: ?Pick_arr_rel_insert_input,
   Users?: ?User_arr_rel_insert_input,
@@ -42,8 +43,8 @@ export type Faction_insert_input = {|
   name?: ?string,
   url?: ?string,
 |};
-export type Ban_arr_rel_insert_input = {|
-  data: $ReadOnlyArray<Ban_insert_input>,
+export type Ban_obj_rel_insert_input = {|
+  data: Ban_insert_input,
   on_conflict?: ?Ban_on_conflict,
 |};
 export type Ban_insert_input = {|
@@ -64,7 +65,9 @@ export type Game_insert_input = {|
   Bans?: ?Ban_arr_rel_insert_input,
   Group?: ?Group_obj_rel_insert_input,
   Picks?: ?Pick_arr_rel_insert_input,
+  User?: ?User_obj_rel_insert_input,
   amountOfBans?: ?string,
+  availableSeats?: ?string,
   bansDone?: ?boolean,
   bansLower?: ?number,
   bansUpper?: ?number,
@@ -74,45 +77,16 @@ export type Game_insert_input = {|
   hsLabels?: ?string,
   mapString?: ?string,
   picksDone?: ?boolean,
-  userPicking?: ?string,
+  userPicking?: ?number,
 |};
-export type Group_obj_rel_insert_input = {|
-  data: Group_insert_input,
-  on_conflict?: ?Group_on_conflict,
+export type Ban_arr_rel_insert_input = {|
+  data: $ReadOnlyArray<Ban_insert_input>,
+  on_conflict?: ?Ban_on_conflict,
 |};
-export type Group_insert_input = {|
-  Games?: ?Game_arr_rel_insert_input,
-  GroupName?: ?string,
-  Users?: ?User_arr_rel_insert_input,
-  group_id?: ?number,
-|};
-export type Game_arr_rel_insert_input = {|
-  data: $ReadOnlyArray<Game_insert_input>,
-  on_conflict?: ?Game_on_conflict,
-|};
-export type Game_on_conflict = {|
-  constraint: Game_constraint,
-  update_columns: $ReadOnlyArray<Game_update_column>,
-  where?: ?Game_bool_exp,
-|};
-export type Game_bool_exp = {|
-  Bans?: ?Ban_bool_exp,
-  Group?: ?Group_bool_exp,
-  Picks?: ?Pick_bool_exp,
-  _and?: ?$ReadOnlyArray<Game_bool_exp>,
-  _not?: ?Game_bool_exp,
-  _or?: ?$ReadOnlyArray<Game_bool_exp>,
-  amountOfBans?: ?String_comparison_exp,
-  bansDone?: ?Boolean_comparison_exp,
-  bansLower?: ?Int_comparison_exp,
-  bansUpper?: ?Int_comparison_exp,
-  draftStarted?: ?Boolean_comparison_exp,
-  game_id?: ?Int_comparison_exp,
-  groupId?: ?Int_comparison_exp,
-  hsLabels?: ?String_comparison_exp,
-  mapString?: ?String_comparison_exp,
-  picksDone?: ?Boolean_comparison_exp,
-  userPicking?: ?String_comparison_exp,
+export type Ban_on_conflict = {|
+  constraint: Ban_constraint,
+  update_columns: $ReadOnlyArray<Ban_update_column>,
+  where?: ?Ban_bool_exp,
 |};
 export type Ban_bool_exp = {|
   Faction?: ?Faction_bool_exp,
@@ -128,6 +102,7 @@ export type Ban_bool_exp = {|
   userId?: ?Int_comparison_exp,
 |};
 export type Faction_bool_exp = {|
+  Ban?: ?Ban_bool_exp,
   Bans?: ?Ban_bool_exp,
   Picks?: ?Pick_bool_exp,
   Users?: ?User_bool_exp,
@@ -151,25 +126,26 @@ export type Pick_bool_exp = {|
   picked?: ?Boolean_comparison_exp,
   userId?: ?Int_comparison_exp,
 |};
-export type User_bool_exp = {|
+export type Game_bool_exp = {|
   Bans?: ?Ban_bool_exp,
-  Faction?: ?Faction_bool_exp,
   Group?: ?Group_bool_exp,
   Picks?: ?Pick_bool_exp,
-  _and?: ?$ReadOnlyArray<User_bool_exp>,
-  _not?: ?User_bool_exp,
-  _or?: ?$ReadOnlyArray<User_bool_exp>,
-  auth0_id?: ?String_comparison_exp,
-  banningDone?: ?Boolean_comparison_exp,
-  custodian?: ?Boolean_comparison_exp,
-  email?: ?String_comparison_exp,
-  factionId?: ?Int_comparison_exp,
+  User?: ?User_bool_exp,
+  _and?: ?$ReadOnlyArray<Game_bool_exp>,
+  _not?: ?Game_bool_exp,
+  _or?: ?$ReadOnlyArray<Game_bool_exp>,
+  amountOfBans?: ?String_comparison_exp,
+  availableSeats?: ?String_comparison_exp,
+  bansDone?: ?Boolean_comparison_exp,
+  bansLower?: ?Int_comparison_exp,
+  bansUpper?: ?Int_comparison_exp,
+  draftStarted?: ?Boolean_comparison_exp,
+  game_id?: ?Int_comparison_exp,
   groupId?: ?Int_comparison_exp,
-  name?: ?String_comparison_exp,
-  password?: ?String_comparison_exp,
-  pickOrder?: ?Int_comparison_exp,
-  seatNumber?: ?Int_comparison_exp,
-  user_id?: ?Int_comparison_exp,
+  hsLabels?: ?String_comparison_exp,
+  mapString?: ?String_comparison_exp,
+  picksDone?: ?Boolean_comparison_exp,
+  userPicking?: ?Int_comparison_exp,
 |};
 export type Group_bool_exp = {|
   Games?: ?Game_bool_exp,
@@ -201,16 +177,26 @@ export type String_comparison_exp = {|
   _regex?: ?string,
   _similar?: ?string,
 |};
-export type Int_comparison_exp = {|
-  _eq?: ?number,
-  _gt?: ?number,
-  _gte?: ?number,
-  _in?: ?$ReadOnlyArray<number>,
-  _is_null?: ?boolean,
-  _lt?: ?number,
-  _lte?: ?number,
-  _neq?: ?number,
-  _nin?: ?$ReadOnlyArray<number>,
+export type User_bool_exp = {|
+  Bans?: ?Ban_bool_exp,
+  Faction?: ?Faction_bool_exp,
+  Games?: ?Game_bool_exp,
+  Group?: ?Group_bool_exp,
+  Picks?: ?Pick_bool_exp,
+  _and?: ?$ReadOnlyArray<User_bool_exp>,
+  _not?: ?User_bool_exp,
+  _or?: ?$ReadOnlyArray<User_bool_exp>,
+  auth0_id?: ?String_comparison_exp,
+  banningDone?: ?Boolean_comparison_exp,
+  custodian?: ?Boolean_comparison_exp,
+  email?: ?String_comparison_exp,
+  factionId?: ?Int_comparison_exp,
+  groupId?: ?Int_comparison_exp,
+  name?: ?String_comparison_exp,
+  password?: ?String_comparison_exp,
+  pickOrder?: ?Int_comparison_exp,
+  seatNumber?: ?Int_comparison_exp,
+  user_id?: ?Int_comparison_exp,
 |};
 export type Boolean_comparison_exp = {|
   _eq?: ?boolean,
@@ -223,6 +209,36 @@ export type Boolean_comparison_exp = {|
   _neq?: ?boolean,
   _nin?: ?$ReadOnlyArray<boolean>,
 |};
+export type Int_comparison_exp = {|
+  _eq?: ?number,
+  _gt?: ?number,
+  _gte?: ?number,
+  _in?: ?$ReadOnlyArray<number>,
+  _is_null?: ?boolean,
+  _lt?: ?number,
+  _lte?: ?number,
+  _neq?: ?number,
+  _nin?: ?$ReadOnlyArray<number>,
+|};
+export type Group_obj_rel_insert_input = {|
+  data: Group_insert_input,
+  on_conflict?: ?Group_on_conflict,
+|};
+export type Group_insert_input = {|
+  Games?: ?Game_arr_rel_insert_input,
+  GroupName?: ?string,
+  Users?: ?User_arr_rel_insert_input,
+  group_id?: ?number,
+|};
+export type Game_arr_rel_insert_input = {|
+  data: $ReadOnlyArray<Game_insert_input>,
+  on_conflict?: ?Game_on_conflict,
+|};
+export type Game_on_conflict = {|
+  constraint: Game_constraint,
+  update_columns: $ReadOnlyArray<Game_update_column>,
+  where?: ?Game_bool_exp,
+|};
 export type User_arr_rel_insert_input = {|
   data: $ReadOnlyArray<User_insert_input>,
   on_conflict?: ?User_on_conflict,
@@ -230,6 +246,7 @@ export type User_arr_rel_insert_input = {|
 export type User_insert_input = {|
   Bans?: ?Ban_arr_rel_insert_input,
   Faction?: ?Faction_obj_rel_insert_input,
+  Games?: ?Game_arr_rel_insert_input,
   Group?: ?Group_obj_rel_insert_input,
   Picks?: ?Pick_arr_rel_insert_input,
   auth0_id?: ?string,
@@ -266,11 +283,6 @@ export type Group_on_conflict = {|
 export type User_obj_rel_insert_input = {|
   data: User_insert_input,
   on_conflict?: ?User_on_conflict,
-|};
-export type Ban_on_conflict = {|
-  constraint: Ban_constraint,
-  update_columns: $ReadOnlyArray<Ban_update_column>,
-  where?: ?Ban_bool_exp,
 |};
 export type Faction_on_conflict = {|
   constraint: Faction_constraint,

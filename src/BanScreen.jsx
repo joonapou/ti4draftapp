@@ -1,22 +1,18 @@
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
-import React, {Component} from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import FormLabel from '@material-ui/core/FormLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
 import Link from '@material-ui/core/Link'
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
-import List from '@material-ui/core/List'
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Typography from '@material-ui/core/Typography';
 import Checkbox from '@material-ui/core/Checkbox';
-import {useState, useReducer} from 'react'
 import graphql from 'babel-plugin-relay/macro';
 import RelayEnvironment from './RelayEnvironment';
 import {Suspense} from 'react';
-import InitGame from './helpers/InitGame';
 import type {Environment} from 'react-relay'
 import {
   RelayEnvironmentProvider,
@@ -58,14 +54,6 @@ const BanScreenQuery = graphql`
   }
 }
 `;
-const BanScreenInitQuery = graphql`
-  query BanScreenInitQuery {
-  Faction {
-    faction_id
-    name
-    }
-}
-`;
 const BanScreenMutation = graphql`
   mutation BanScreenMutation($banId: Int, $banned: Boolean) {
   update_Ban(_set: {banned: $banned}, where: {ban_id: {_eq: $banId}}) {
@@ -77,11 +65,11 @@ const BanScreenMutation = graphql`
 }
 `
 function RunMutation(environment: Environment,
-  objects, mutation) {
+  objects, mutation, callback) {
   return commitMutation(environment, {
     mutation: mutation,
     variables: objects,
-    onCompleted: response => {} /* Mutation completed */,
+    onCompleted: response => {callback()} /* Mutation completed */,
     onError: error => {console.log(error)} /* Mutation errored */,
   });
 }
@@ -104,11 +92,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function handleSubmit(e, bans, refresh) {
-    //e.preventDefault();
     for (var a = 0; a < bans.length; ++a){
       var element = document.getElementById(bans[a].ban_id)
       console.log("banned", element.checked, "ban_id", element.id )
-      RunMutation(RelayEnvironment, {banId: element.id, banned: element.checked}, BanScreenMutation)
+      RunMutation(RelayEnvironment, {banId: element.id, banned: element.checked}, BanScreenMutation, refresh)
       
     }
 
@@ -122,53 +109,10 @@ function handleClick(e, row){
   window.open(row.Faction.url)
 }
 function BanScreenChild(props, gameInfo) {
-  const [value,setValue] = useState();
-  const refresh = () => {
-    setValue({});
-  }
-//   if (!bans ) return <div>loading...</div>
-//   const [factionbans, dispatch] = useReducer((state, action) => {
-//       switch (action.type) {
-//         case 'add':
-//           return [
-//       ...state,
-//         {
-//           factionName: action.factionName,
-//           banId: action.banId,
-//           banned: action.banned
-          
-//         }
-//       ];
-//       case "UPDATE_ROW":
-//       console.log("updating", action.factionName);
-//       return {...state, factionsbans:state.rows.map((row) =>
-//         row._id === action.payload._id
-//           ? {
-//               ...action.payload
-//             }
-//           : row
-//       )};
-//       default:
-//         return state;
-//       }
-//     }, bans.bans);
-    
-  
- 
-//   const classes = useStyles();
-
-// function handleClick(e, row){
-//   dispatch({
-//     type: 'add',
-//     factionName: row.factionName,
-//     banned: e.target.checked,
-//     banId: row.banId
-//   })
-// }
-//const data = usePreloadedQuery(BanScreenQuery, props.preloadedQuery)
- const data = usePreloadedQuery(BanScreenQuery, props.preloadedQuery)
- const banInfo = useLazyLoadQuery(BanScreenInfoQuery);
-const classes = useStyles();
+  const refresh = () => {window.location.reload()}
+  const data = usePreloadedQuery(BanScreenQuery, props.preloadedQuery)
+  const banInfo = useLazyLoadQuery(BanScreenInfoQuery);
+  const classes = useStyles();
 //InitGame();
   if (data.User[0].banningDone === false){
 return (

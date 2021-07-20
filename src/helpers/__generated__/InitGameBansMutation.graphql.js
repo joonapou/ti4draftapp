@@ -13,7 +13,7 @@ export type Ban_update_column = "ban_id" | "banned" | "factionId" | "gameId" | "
 export type Faction_constraint = "Faction_id_key" | "Faction_pkey1" | "%future added value";
 export type Faction_update_column = "faction_id" | "name" | "url" | "%future added value";
 export type Game_constraint = "Game_groupId_unique" | "Game_pkey" | "%future added value";
-export type Game_update_column = "amountOfBans" | "bansDone" | "bansLower" | "bansUpper" | "draftStarted" | "game_id" | "groupId" | "hsLabels" | "mapString" | "picksDone" | "userPicking" | "%future added value";
+export type Game_update_column = "amountOfBans" | "availableSeats" | "bansDone" | "bansLower" | "bansUpper" | "draftStarted" | "game_id" | "groupId" | "hsLabels" | "mapString" | "picksDone" | "userPicking" | "%future added value";
 export type Group_constraint = "Group_pkey" | "%future added value";
 export type Group_update_column = "GroupName" | "group_id" | "%future added value";
 export type Pick_constraint = "Pick_pkey" | "Pick_userId_unique" | "%future added value";
@@ -35,6 +35,7 @@ export type Faction_obj_rel_insert_input = {|
   on_conflict?: ?Faction_on_conflict,
 |};
 export type Faction_insert_input = {|
+  Ban?: ?Ban_obj_rel_insert_input,
   Bans?: ?Ban_arr_rel_insert_input,
   Picks?: ?Pick_arr_rel_insert_input,
   Users?: ?User_arr_rel_insert_input,
@@ -42,8 +43,8 @@ export type Faction_insert_input = {|
   name?: ?string,
   url?: ?string,
 |};
-export type Ban_arr_rel_insert_input = {|
-  data: $ReadOnlyArray<Ban_insert_input>,
+export type Ban_obj_rel_insert_input = {|
+  data: Ban_insert_input,
   on_conflict?: ?Ban_on_conflict,
 |};
 export type Ban_on_conflict = {|
@@ -65,6 +66,7 @@ export type Ban_bool_exp = {|
   userId?: ?Int_comparison_exp,
 |};
 export type Faction_bool_exp = {|
+  Ban?: ?Ban_bool_exp,
   Bans?: ?Ban_bool_exp,
   Picks?: ?Pick_bool_exp,
   Users?: ?User_bool_exp,
@@ -92,10 +94,12 @@ export type Game_bool_exp = {|
   Bans?: ?Ban_bool_exp,
   Group?: ?Group_bool_exp,
   Picks?: ?Pick_bool_exp,
+  User?: ?User_bool_exp,
   _and?: ?$ReadOnlyArray<Game_bool_exp>,
   _not?: ?Game_bool_exp,
   _or?: ?$ReadOnlyArray<Game_bool_exp>,
   amountOfBans?: ?String_comparison_exp,
+  availableSeats?: ?String_comparison_exp,
   bansDone?: ?Boolean_comparison_exp,
   bansLower?: ?Int_comparison_exp,
   bansUpper?: ?Int_comparison_exp,
@@ -105,7 +109,7 @@ export type Game_bool_exp = {|
   hsLabels?: ?String_comparison_exp,
   mapString?: ?String_comparison_exp,
   picksDone?: ?Boolean_comparison_exp,
-  userPicking?: ?String_comparison_exp,
+  userPicking?: ?Int_comparison_exp,
 |};
 export type Group_bool_exp = {|
   Games?: ?Game_bool_exp,
@@ -140,6 +144,7 @@ export type String_comparison_exp = {|
 export type User_bool_exp = {|
   Bans?: ?Ban_bool_exp,
   Faction?: ?Faction_bool_exp,
+  Games?: ?Game_bool_exp,
   Group?: ?Group_bool_exp,
   Picks?: ?Pick_bool_exp,
   _and?: ?$ReadOnlyArray<User_bool_exp>,
@@ -179,6 +184,10 @@ export type Int_comparison_exp = {|
   _neq?: ?number,
   _nin?: ?$ReadOnlyArray<number>,
 |};
+export type Ban_arr_rel_insert_input = {|
+  data: $ReadOnlyArray<Ban_insert_input>,
+  on_conflict?: ?Ban_on_conflict,
+|};
 export type Pick_arr_rel_insert_input = {|
   data: $ReadOnlyArray<Pick_insert_input>,
   on_conflict?: ?Pick_on_conflict,
@@ -201,7 +210,9 @@ export type Game_insert_input = {|
   Bans?: ?Ban_arr_rel_insert_input,
   Group?: ?Group_obj_rel_insert_input,
   Picks?: ?Pick_arr_rel_insert_input,
+  User?: ?User_obj_rel_insert_input,
   amountOfBans?: ?string,
+  availableSeats?: ?string,
   bansDone?: ?boolean,
   bansLower?: ?number,
   bansUpper?: ?number,
@@ -211,7 +222,7 @@ export type Game_insert_input = {|
   hsLabels?: ?string,
   mapString?: ?string,
   picksDone?: ?boolean,
-  userPicking?: ?string,
+  userPicking?: ?number,
 |};
 export type Group_obj_rel_insert_input = {|
   data: Group_insert_input,
@@ -239,6 +250,7 @@ export type User_arr_rel_insert_input = {|
 export type User_insert_input = {|
   Bans?: ?Ban_arr_rel_insert_input,
   Faction?: ?Faction_obj_rel_insert_input,
+  Games?: ?Game_arr_rel_insert_input,
   Group?: ?Group_obj_rel_insert_input,
   Picks?: ?Pick_arr_rel_insert_input,
   auth0_id?: ?string,

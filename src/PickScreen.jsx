@@ -1,47 +1,47 @@
-import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
-import React, {Component} from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import FormLabel from '@material-ui/core/FormLabel';
-import FormControl from '@material-ui/core/FormControl';
-import FormGroup from '@material-ui/core/FormGroup';
 import Link from '@material-ui/core/Link'
 import Button from '@material-ui/core/Button';
-import clsx from 'clsx';
-import Paper from '@material-ui/core/Paper';
-import List from '@material-ui/core/List'
-import InitPicks from './helpers/InitPicks.js'
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Typography from '@material-ui/core/Typography';
-import Checkbox from '@material-ui/core/Checkbox';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionActions from '@material-ui/core/AccordionActions';
+import Alert from '@material-ui/lab/Alert';
 import Divider from '@material-ui/core/Divider';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Chip from '@material-ui/core/Chip';
-import {useState, useReducer} from 'react'
+import {useState} from 'react'
 import graphql from 'babel-plugin-relay/macro';
 import RelayEnvironment from './RelayEnvironment';
 import {Suspense} from 'react';
-import InitGame from './helpers/InitGame';
 import type {Environment} from 'react-relay'
+
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import MenuItem from '@material-ui/core/MenuItem';
+import Menu from '@material-ui/core/Menu';
 import {
   RelayEnvironmentProvider,
   loadQuery,
   usePreloadedQuery,
-  useLazyLoadQuery,
   commitMutation
 } from 'react-relay/hooks';
 
-// const BanScreenUserMutation = graphql`
-// mutation BanScreenUserMutation($auth0id: String, $banningDone: Boolean) {
-//   update_User(where: {auth0_id: {_eq: $auth0id}}, _set: {banningDone: $banningDone}) {
-//     affected_rows
-//   }
-// }
-// `;
+const PickScreenUserSeatMutation = graphql`
+mutation PickScreenUserSeatMutation($auth0id: String, $seatnumber: Int) {
+  update_User(where: {auth0_id: {_eq: $auth0id}}, _set: {seatNumber: $seatnumber}) {
+    affected_rows
+  }
+}
+`;
+const PickScreenUserFactionMutation = graphql`
+mutation PickScreenUserFactionMutation($auth0id: String, $faction_id: Int) {
+  update_User(where: {auth0_id: {_eq: $auth0id}}, _set: {factionId: $faction_id}) {
+    affected_rows
+  }
+}
+`;
 const PickScreenQuery = graphql`
   query PickScreenQuery {
    Faction(where: {_not: {Bans: {}}}) {
@@ -58,7 +58,15 @@ const PickScreenQuery = graphql`
     }
   }
 }`;
-
+function RunMutation(environment: Environment,
+  objects, mutation, callback) {
+  return commitMutation(environment, {
+    mutation: mutation,
+    variables: objects,
+    onCompleted: response => {callback()} /* Mutation completed */,
+    onError: error => {console.log(error)} /* Mutation errored */,
+  });
+}
 const preloadedQuery = loadQuery(RelayEnvironment, PickScreenQuery, {
 });
 
@@ -103,44 +111,82 @@ const useStyles = makeStyles((theme) => ({
 }));
 function GetPicks(props) {
   const data = usePreloadedQuery(PickScreenQuery, props.preloadedQuery)
-  var factions_array = data.Faction;
   var bans_array = [];
   for (var i = 0; i<data.Ban.length;++i){
     bans_array.push(data.Ban[i].Faction)
   }
   return data.Faction.concat(bans_array)
 }
-// function handleSubmit(e, bans, refresh) {
-//     //e.preventDefault();
-//     for (var a = 0; a < bans.length; ++a){
-//       var element = document.getElementById(bans[a].ban_id)
-//       console.log("banned", element.checked, "ban_id", element.id )
-//       RunMutation(RelayEnvironment, {banId: element.id, banned: element.checked}, BanScreenMutation)
-//       refresh();
-//     }
-//     var auth0id = localStorage.getItem('auth0:id_token:sub');
-//     RunMutation(RelayEnvironment, {auth0id: auth0id, banningDone: true}, BanScreenUserMutation)
-// }
-function handleClick(e){
-  e.preventDefault();
-  InitGame();
-  
+function GetAvailableSeats(props) {
+  const seats = props.data.data.User[0].Group.Games[0].availableSeats.split(',')
+  return seats;
 }
-function PickScreenChild(props, gameInfo) {
-  const [value,setValue] = useState();
-  //InitPicks();
-  const refresh = () => {
-    setValue({});
-  }
+function handleSeatSubmit(e, seatdata, refresh, alert) {
+    if (alert){
+      console.log("don't submit", "alert:", alert)
+    } else {
+      var auth0id = localStorage.getItem('auth0:id_token:sub');
+      RunMutation(RelayEnvironment, {auth0id: auth0id, seatnumber: seatdata}, PickScreenUserSeatMutation, refresh)
+    }
+}
+function handleFactionSubmit(e, factiondata, refresh, alert) {
+   if (alert){
+      console.log("don't submit", "alert:", alert)
+    } else {
+      var auth0id = localStorage.getItem('auth0:id_token:sub');
+      RunMutation(RelayEnvironment, {auth0id: auth0id, faction_id: factiondata.faction_id}, PickScreenUserFactionMutation, refresh)
+    }
+    
+}
 
+function PickScreenChild(props) {
+  const [expanded, setExpanded] = useState(false);
+  const [seatData, setSeatData] = useState(null);
+  const [factionData, setFactionData] = useState(null);
+  const [factionanchorEl, setFactionAnchorEl] = React.useState(null);
+  const [seatanchorEl, setSeatAnchorEl] = useState(null);
+  const [alert, setAlert] = useState(false);
+  const seats = GetAvailableSeats(props);
+  const userSeatSelected = () => {return props.data.data.User[0].seatNumber !== null}
+  const userFactionSelected = () => {return props.data.data.User[0].Faction !== null}
+  const refresh = () => {window.location.reload()}
+  const handleChange = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
+  const handleClickListItemFaction = (event) => {
+    setFactionAnchorEl(event.currentTarget);
+  };
+  const handleClickListItemSeat = (event) => {
+    setSeatAnchorEl(event.currentTarget);
+  };
+
+  function handleMenuItemClickSeat(row) {
+    setSeatData(row)
+    setSeatAnchorEl(null);
+  };
+  function handleMenuItemClickFaction(row) {
+
+    setFactionData(row)
+    setFactionAnchorEl(null);
+  };
+
+  const handleCloseFaction = () => {
+    setFactionAnchorEl(null);
+  };
+  const handleCloseSeat = () => {
+    setSeatAnchorEl(null);
+  };
+  const factionInfoClick = (e, faction) => {
+    window.open(faction.url)
+  }
   const picks = GetPicks(props);
+  const seatDisabled = userSeatSelected();
+  const factionDisabled = userFactionSelected();
 const classes = useStyles();
-console.log(picks)
 
 return (
-       // Ban Faction
        <div className={classes.root}>
-       <Accordion >
+       <Accordion disabled={seatDisabled}expanded={expanded === 'seats'} onChange={handleChange('seats')}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1c-content"
@@ -151,29 +197,55 @@ return (
           </div>
         </AccordionSummary>
         <AccordionDetails className={classes.details}>
-          <div className={classes.column} />
-          <div className={classes.column}>
-            <Chip label="Barbados" onDelete={() => {}} />
-          </div>
-          <div className={clsx(classes.column, classes.helper)}>
-            <Typography variant="caption">
-              Select your destination of choice
-              <br />
-              <a href="#secondary-heading-and-columns" className={classes.link}>
-                Learn more
-              </a>
-            </Typography>
-          </div>
+         <div className={classes.root}>
+      <List component="nav" aria-label="Device settings">
+        <ListItem
+          button
+          aria-haspopup="true"
+          aria-controls="lock-menu"
+          aria-label="when device is locked"
+          onClick={handleClickListItemSeat}
+        >
+          <ListItemText primary={seatData === null ? "Select seat" : seatData} />
+        </ListItem>
+      </List>
+      <Menu
+        id="lock-menu"
+        anchorEl={seatanchorEl}
+        keepMounted
+        open={Boolean(seatanchorEl)}
+        onClose={handleCloseSeat}
+      >
+        {seats.map((row, index) => (
+          <MenuItem
+            key={row}
+            onClick={() => {
+              handleMenuItemClickSeat(row);
+            }}
+          >
+            {row}
+          </MenuItem>
+        ))}
+      </Menu>
+      { alert===true && <Alert severity="error" onClose={() => {setAlert(false)}}>Please select a seat to continue</Alert>}
+      
+    </div>
         </AccordionDetails>
         <Divider />
         <AccordionActions>
-          <Button size="small">Cancel</Button>
-          <Button size="small" color="primary">
-            Save
-          </Button>
+          <Button id="seatsubmit" color="secondary" fullWidth type="submit" variant="contained" onClick={(e) => {
+            if (seatData === null){
+              setAlert(true)
+            } else {
+              handleSeatSubmit(e, seatData, refresh, alert)
+            }
+            
+          }}>
+                  Submit
+                </Button>
         </AccordionActions>
       </Accordion>
-      <Accordion>
+       <Accordion disabled={factionDisabled}expanded={expanded === 'factions'} onChange={handleChange('factions')}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1c-content"
@@ -183,38 +255,66 @@ return (
             <Typography className={classes.heading}>Select faction</Typography>
           </div>
         </AccordionSummary>
-        <AccordionDetails className={classes.details}>
-          <div className={classes.column} />
-          <div className={classes.column}>
-            <Chip label="Barbados" onDelete={() => {}} />
-          </div>
-          <div className={clsx(classes.column, classes.helper)}>
-            <Typography variant="caption">
-              Select your destination of choice
-              <br />
-              <a href="#secondary-heading-and-columns" className={classes.link}>
-                Learn more
-              </a>
-            </Typography>
-          </div>
+        <AccordionDetails>
+        <div className={classes.root}>
+      <List component="nav" aria-label="Device settings">
+        <ListItem
+          button
+          aria-haspopup="true"
+          aria-controls="lock-menu"
+          aria-label="when device is locked"
+          onClick={handleClickListItemFaction}
+        >
+          <ListItemText primary={factionData === null ? "Select faction" : factionData.name} 
+          secondary={factionData === null ? "" : <Link target="_blank" component="button" onClick={(e) => factionInfoClick(e,factionData)}> Faction info </Link>
+
+          } />
+        </ListItem>
+      </List>
+      <Menu
+        id="lock-menu"
+        anchorEl={factionanchorEl}
+        keepMounted
+        open={Boolean(factionanchorEl)}
+        onClose={handleCloseFaction}
+      >
+        {picks.map((row, index) => (
+          <MenuItem
+            key={row.faction_id}
+            onClick={(event) => {
+              handleMenuItemClickFaction(row);
+            }}
+          >
+            {row.name}
+          </MenuItem>
+        ))}
+      </Menu>
+      { alert===true && <Alert severity="error" onClose={() => {setAlert(false)}}>Please select a seat to continue</Alert>}
+    </div>
         </AccordionDetails>
         <Divider />
         <AccordionActions>
-          <Button size="small">Cancel</Button>
-          <Button size="small" color="primary">
-            Save
-          </Button>
+         <Button id="factionsubmit" color="secondary" fullWidth type="submit" variant="contained" onClick={(e) => {
+            if (factionData === null){
+              setAlert(true)
+            } else {
+              handleFactionSubmit(e, factionData, refresh, alert)
+            }
+            
+          }}>
+                  Submit
+                </Button>
         </AccordionActions>
       </Accordion>
       </div>
       )
 
 }
-export default function PickScreen(gameInfo, props){
+export default function PickScreen(data, props){
   return (
   <RelayEnvironmentProvider environment={RelayEnvironment}>
     <Suspense fallback={'Loading...'}>
-      <PickScreenChild preloadedQuery={preloadedQuery} gameInfo={gameInfo}  />
+      <PickScreenChild preloadedQuery={preloadedQuery} data={data}/>
     </Suspense>
   </RelayEnvironmentProvider>
   );

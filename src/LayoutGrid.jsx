@@ -1,27 +1,20 @@
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
-import React, { Component } from 'react';
+import React from 'react';
 import Paper from '@material-ui/core/Paper';
 import PickOrder from './PickOrder.jsx'
 import Picks from './Picks.jsx'
 import PickButton from './PickButton.jsx'
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/styles';
 import Galaxy from './Galaxy.js'
 
-import Button from '@material-ui/core/Button';
-import useSWR from "swr";
-
-
-
-const fetcher = (url) => fetch(url).then((r) => r.json())
-// const GetData = (endpoint) => {
-//   const { data, error } = useSWR(endpoint, fetcher, {revalidateOnFocus : false, revalidateOnMount: false})
-//   return { data: data, error: error }
-
-// }
-// const getGameData = () => GetData('api/game');
-// const getBanData = () => GetData('api/ban');
+import graphql from 'babel-plugin-relay/macro';
+import RelayEnvironment from './RelayEnvironment';
+import {Suspense} from 'react';
+import {
+  RelayEnvironmentProvider,
+  loadQuery,
+  usePreloadedQuery
+} from 'react-relay/hooks';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,17 +27,55 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.text.secondary,
   },
 }));
+  const LayoutGridBasicQuery = graphql `
+  query LayoutGridBasicQuery($auth0Id: String) {
+  User(where: {auth0_id: {_eq :$auth0Id}}) {
+    auth0_id
+    banningDone
+    custodian
+    name
+    pickOrder
+    seatNumber
+    user_id
+    Bans {
+      ban_id
+      banned
+    }
+    Faction {
+      faction_id
+      name
+    }
+    Group {
+      Games {
+        bansDone
+        bansLower
+        bansUpper
+        draftStarted
+        picksDone
+        userPicking
+        mapString
+        hsLabels
+        availableSeats
+        User {
+          name
+        }
+      }
+    }
+  }
+}`;
 
-   function FormMidRow() {
+const preloadedQuery = loadQuery(RelayEnvironment, LayoutGridBasicQuery, {
+  auth0Id: localStorage.getItem('auth0:id_token:sub')
+});
+   function FormMidRow({data}) {
     const classes = useStyles();
-    //const { data: gameInfo, error: gameInfoError }  = getGameData();
     return (
       <React.Fragment>
         <Grid item xs={4}>
-          <Paper className={classes.paper}><PickButton/></Paper>
+          <Paper className={classes.paper}><PickButton data={data}/></Paper>
         </Grid>
         <Grid item xs={4}>
-          <Paper className={classes.paper}><Galaxy/></Paper>
+          <Paper className={classes.paper}><Galaxy data={data}/></Paper>
         </Grid>
         <Grid item xs={4} >
           <Paper className={classes.paper}><PickOrder/> </Paper>
@@ -52,7 +83,7 @@ const useStyles = makeStyles((theme) => ({
       </React.Fragment>
     );
   }
-   function FormBottomRow() {
+   function FormBottomRow({data}) {
     const classes = useStyles();
     return (
       <React.Fragment>
@@ -65,39 +96,30 @@ const useStyles = makeStyles((theme) => ({
       </React.Fragment>
     );
   }
-// export class LayoutGrid extends Component {
-//  render(){
-//   const { classes } = this.props;
-// return (
-//     <div className={classes.root}>
-//         <Grid container  spacing={3}>
-//           <FormMidRow/>
-//         </Grid>
-//         <Grid container spacing={3}>
-//           <FormBottomRow/>
-//         </Grid>
-//     </div>
 
-// )
-// }
-// }
-// LayoutGrid.propTypes = {
-//   classes: PropTypes.object.isRequired
-// }
-// export default withStyles(styles)(LayoutGrid);
-
-
-export default function LayoutGrid() {
+function LayoutGridChild(props) {
  const classes = useStyles();
+ const data = usePreloadedQuery(LayoutGridBasicQuery, props.preloadedQuery)
+ console.log("data:", data)
 return (
     <div className={classes.root}>
         <Grid container spacing={3}>
-          <FormMidRow/>
+          <FormMidRow data={data}/>
         </Grid>
         <Grid container spacing={3}>
-          <FormBottomRow/>
+          <FormBottomRow data={data}/>
         </Grid>
     </div>
 
 )
+}
+
+export default function LayoutGrid(props){
+  return (
+  <RelayEnvironmentProvider environment={RelayEnvironment}>
+    <Suspense fallback={'Loading...'}>
+      <LayoutGridChild preloadedQuery={preloadedQuery}/>
+    </Suspense>
+  </RelayEnvironmentProvider>
+  );
 }

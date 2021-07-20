@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.11.4",
+    "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "^4.0.0-alpha.60",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
@@ -13,6 +15,7 @@
     "apollo-link-http": "^1.5.17",
     "auth0-js": "^9.16.2",
     "bootstrap": "^5.0.2",
+    "clsx": "^1.1.1",
     "graphqurl": "^1.0.1",
     "history": "^5.0.0",
     "js-cookie": "^2.2.1",
@@ -57,5 +60,6 @@
     "babel-plugin-relay": "^11.0.2",
     "graphql": "^15.5.1",
     "relay-compiler": "^11.0.2"
-  }
+  },
+  "proxy": "http://ti4-card-images.appspot.com"
 }
