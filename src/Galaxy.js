@@ -1,33 +1,11 @@
-import type {Environment} from 'react-relay'
-import styles from './styles/Home.module.css'
-import {
-  RelayEnvironmentProvider,
-  loadQuery,
-  usePreloadedQuery,
-  useLazyLoadQuery,
-  commitMutation
-} from 'react-relay/hooks';
-import graphql from 'babel-plugin-relay/macro';
-import RelayEnvironment from './RelayEnvironment';
-import React, {useState, Fragment, useEffect, Suspense} from 'react';
 
+import React, {useState} from 'react';
 
-
-const GalaxyQuery = graphql`
-  query GalaxyQuery {
-  Game {
-    mapString
-    hsLabels
-  }
-}`;
-const preloadedQuery = loadQuery(RelayEnvironment, GalaxyQuery, {
-
-});
-
-function GalaxyChild(props) {
+export default function Galaxy({data}) {
+	const gameInfo = data.User[0].Group.Games[0]
+	const encoded_labels = encodeURIComponent(gameInfo.hsLabels);
 	const [imageurl, setImageUrl] = useState("https://c.files.bbci.co.uk/16620/production/_91408619_55df76d5-2245-41c1-8031-07a4da3f313f.jpg");
-	const data = usePreloadedQuery(GalaxyQuery, props.preloadedQuery);
-	var urlstring = `/map?tiles=${data.Game[0].mapString}&hslabels=${data.Game[0].hsLabels}`
+	var urlstring = `/map?tiles=${gameInfo.mapString}&hslabels=${encoded_labels}`
 	var localUrl;
 	if (imageurl.search('localhost') === -1){
 		fetch(urlstring,{
@@ -53,18 +31,7 @@ function GalaxyChild(props) {
 
 		return(
    <div>
-      <img src={imageurl} id="galaxyimg" max-width="100%"/>
+      <img src={imageurl} id="galaxyimg" max-width="100%" alt="galaxy"/>
    </div>
 )
-
-	
-}
-export default function Galaxy(props){
-  return (
-  <RelayEnvironmentProvider environment={RelayEnvironment}>
-    <Suspense fallback={'Loading...'}>
-      <GalaxyChild preloadedQuery={preloadedQuery}/>
-    </Suspense>
-  </RelayEnvironmentProvider>
-  );
-}
+	}

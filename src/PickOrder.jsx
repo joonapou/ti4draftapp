@@ -1,4 +1,4 @@
-import styles from './styles/Home.module.css'
+
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -7,7 +7,6 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import type {User} from './schema.graphql'
 import graphql from 'babel-plugin-relay/macro';
 import RelayEnvironment from './RelayEnvironment';
 import {Suspense} from 'react';

@@ -1,11 +1,8 @@
 import graphql from 'babel-plugin-relay/macro';
 import RelayEnvironment from '../RelayEnvironment';
 import type {Environment} from 'react-relay'
-import type {Ban_insert_input, InitGameBansMutation} from 'InitGameBansMutation.graphql';
 import {
   RelayEnvironmentProvider,
-  loadQuery,
-  usePreloadedQuery,
   useLazyLoadQuery,
   commitMutation
   } from 'react-relay/hooks';

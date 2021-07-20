@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import LayoutGrid from '../LayoutGrid.jsx';
-import PickOrder from '../PickOrder.jsx'
 
 class Home extends Component {
   login() {
