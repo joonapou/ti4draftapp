@@ -6,9 +6,11 @@ import PickOrder from './PickOrder.jsx'
 import Picks from './Picks.jsx'
 import PickButton from './PickButton.jsx'
 import Galaxy from './Galaxy.js'
-
+import Group from './Group.js'
+import CreateGame from './CreateGame.js'
 import graphql from 'babel-plugin-relay/macro';
 import RelayEnvironment from './RelayEnvironment';
+import Typography from '@material-ui/core/Typography';
 import {Suspense} from 'react';
 import {
   RelayEnvironmentProvider,
@@ -29,36 +31,45 @@ const useStyles = makeStyles((theme) => ({
 }));
   const LayoutGridBasicQuery = graphql `
   query LayoutGridBasicQuery($auth0Id: String) {
-  User(where: {auth0_id: {_eq :$auth0Id}}) {
+   User(where: {auth0_id: {_eq: $auth0Id}}) {
     auth0_id
-    banningDone
-    custodian
+    groupId
     name
-    pickOrder
-    seatNumber
     user_id
-    Bans {
-      ban_id
-      banned
-    }
-    Faction {
-      faction_id
-      name
-    }
-    Group {
-      Games {
+    GameUsers {
+      banningDone
+      gameId
+      gameuser_id
+      pickId
+      pickOrder
+      seatNumber
+      userId
+      Bans {
+        ban_id
+        banned
+      }
+      Pick {
+        pick_id
+        picked
+        Faction {
+          faction_id
+          name
+          url
+        }
+      }
+      Game {
+        availableSeats
         bansDone
         bansLower
         bansUpper
         draftStarted
+        gameAdmin
+        game_id
+        groupId
+        hsLabels
+        mapString
         picksDone
         userPicking
-        mapString
-        hsLabels
-        availableSeats
-        User {
-          name
-        }
       }
     }
   }
@@ -100,8 +111,12 @@ const preloadedQuery = loadQuery(RelayEnvironment, LayoutGridBasicQuery, {
 function LayoutGridChild(props) {
  const classes = useStyles();
  const data = usePreloadedQuery(LayoutGridBasicQuery, props.preloadedQuery)
- console.log("data:", data)
-return (
+ localStorage.setItem('gameuserId', 1)
+ console.log(data)
+ if(data.User[0].groupId !== null){
+  if(data.User[0].GameUsers.length === 1){
+    console.log("1")
+    return (
     <div className={classes.root}>
         <Grid container spacing={3}>
           <FormMidRow data={data}/>
@@ -110,10 +125,29 @@ return (
           <FormBottomRow data={data}/>
         </Grid>
     </div>
-
-)
+    )
+  } else if (data.User[0].GameUsers.length >1){
+    console.log("2")
+    return(
+      <Typography variant="h6" className={classes.title}>
+                handle multiple games
+              </Typography>
+      )
+    
+  } else {
+    console.log("3")
+    return(
+      // join or create a game
+    <CreateGame data={data}/>
+    )
+  }
+  } else {
+    console.log("4")
+    return(
+    <Group data={data}/>
+      )
+  }
 }
-
 export default function LayoutGrid(props){
   return (
   <RelayEnvironmentProvider environment={RelayEnvironment}>
