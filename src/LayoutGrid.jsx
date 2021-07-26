@@ -11,13 +11,16 @@ import CreateGame from './CreateGame.js'
 import graphql from 'babel-plugin-relay/macro';
 import RelayEnvironment from './RelayEnvironment';
 import Typography from '@material-ui/core/Typography';
+import { useState, useEffect } from 'react';
 import {Suspense} from 'react';
+import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
 import {
   RelayEnvironmentProvider,
   loadQuery,
-  usePreloadedQuery
+  usePreloadedQuery,
+  useLazyLoadQuery
 } from 'react-relay/hooks';
-
+var jwt = require('jsonwebtoken');
 const useStyles = makeStyles((theme) => ({
   root: {
     height: '100%',
@@ -30,13 +33,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
   const LayoutGridBasicQuery = graphql `
-  query LayoutGridBasicQuery($auth0Id: String) {
+  query LayoutGridBasicQuery($auth0Id: String, $gameUserId: Int) {
    User(where: {auth0_id: {_eq: $auth0Id}}) {
     auth0_id
     groupId
     name
     user_id
-    GameUsers {
+    GameUsers(where: {gameuser_id: {_eq: $gameUserId}}) {
       banningDone
       gameId
       gameuser_id
@@ -76,7 +79,8 @@ const useStyles = makeStyles((theme) => ({
 }`;
 
 const preloadedQuery = loadQuery(RelayEnvironment, LayoutGridBasicQuery, {
-  auth0Id: localStorage.getItem('auth0:id_token:sub')
+  auth0Id: localStorage.getItem('auth0:id_token:sub'),
+  gameUserId: localStorage.getItem('gameuserId')
 });
    function FormMidRow({data}) {
     const classes = useStyles();
@@ -110,9 +114,14 @@ const preloadedQuery = loadQuery(RelayEnvironment, LayoutGridBasicQuery, {
 
 function LayoutGridChild(props) {
  const classes = useStyles();
+ const {user} = useAuth0();
+ if (localStorage.getItem('gameuserId') === null){
+  localStorage.setItem('gameuserId', -1)
+ }
  const data = usePreloadedQuery(LayoutGridBasicQuery, props.preloadedQuery)
- localStorage.setItem('gameuserId', 1)
- console.log(data)
+ var auth0Id = user
+ console.log(user.sub)
+ localStorage.setItem('auth0:id_token:sub', user.sub)
  if(data.User[0].groupId !== null){
   if(data.User[0].GameUsers.length === 1){
     console.log("1")
@@ -157,3 +166,4 @@ export default function LayoutGrid(props){
   </RelayEnvironmentProvider>
   );
 }
+
