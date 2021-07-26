@@ -1,80 +1,31 @@
-import React, { Component } from 'react';
-import { Navbar, Button } from 'react-bootstrap';
-import './App.css';
+import React from "react";
+import { Route, Switch } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
+
+import  Loading  from "./components/loading.js";
+import  Home  from "./Home/Home.js";
 import LayoutGrid from './LayoutGrid.jsx'
-import CreateGame from './CreateGame.js'
+import ProtectedRoute from "./auth/protected-route.js";
 
+import "./App.css";
 
-export class App extends Component {
-  goTo(route) {
-    this.props.history.replace(`/${route}`)
+const App = () => {
+  const { isLoading } = useAuth0();
+
+  if (isLoading) {
+    return <Loading />;
   }
 
-  login() {
-    this.props.auth.login();
-  }
-
-  logout() {
-    this.props.auth.logout();
-  }
-
-  componentDidMount() {
-    if (this.props.auth.isAuthenticated()) {
-      //this.props.history.push('/game');
-      //return (<Redirect to='/game' />)
-    }
-  }
-
-  render() {
-    const { isAuthenticated } = this.props.auth;
-    if (!this.props.auth.isAuthenticated()) {
-      console.log("1", this.props.auth.isAuthenticated())
-    return (
-      <div className="appdiv">
-
-       <Navbar fluid="true">
-           {/* <Button
-              bsstyle="primary"
-              className="btn-margin"
-              onClick={this.goTo.bind(this, 'test')}
-            >
-              Home
-            </Button>*/}
-            {
-              !isAuthenticated() && (
-                  <Button
-                    id="qsLoginBtn"
-                    bsstyle="primary"
-                    className="btn-margin"
-                    onClick={this.login.bind(this)}
-                  >
-                    Log In
-                  </Button>
-                )
-            }
-           {
-              isAuthenticated() && (
-                  <Button
-                    id="qsLoginBtn"
-                    bsstyle="primary"
-                    className="btn-margin"
-                    onClick={this.logout.bind(this)}
-                  >
-                    Log out
-                  </Button>
-                )
-            }
-        </Navbar>
+  return (
+    <div id="app" className="d-flex flex-column h-100">
+      <div className="container flex-grow-1">
+        <Switch>
+          <Route path="/" exact component={Home} />
+          <ProtectedRoute path="/game" component={LayoutGrid} />
+        </Switch>
       </div>
-    );
-  }
-  else {
-    console.log("2", this.props.auth.isAuthenticated())
-    return (
-    <LayoutGrid/>
-)
-  }
+    </div>
+  );
+};
 
-}
-}
 export default App;
