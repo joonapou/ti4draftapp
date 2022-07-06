@@ -22,32 +22,6 @@ export type Pick_constraint = "Pick_pkey" | "Pick_userId_unique" | "%future adde
 export type Pick_update_column = "factionId" | "gameId" | "gameuserId" | "pick_id" | "picked" | "%future added value";
 export type User_constraint = "User_auth0_id_key" | "User_id_key" | "User_pkey" | "%future added value";
 export type User_update_column = "auth0_id" | "email" | "groupId" | "name" | "password" | "user_id" | "%future added value";
-export type Pick_insert_input = {|
-  Faction?: ?Faction_obj_rel_insert_input,
-  Game?: ?Game_obj_rel_insert_input,
-  GameUser?: ?GameUser_obj_rel_insert_input,
-  GameUsers?: ?GameUser_arr_rel_insert_input,
-  factionId?: ?number,
-  gameId?: ?number,
-  gameuserId?: ?number,
-  pick_id?: ?number,
-  picked?: ?boolean,
-|};
-export type Faction_obj_rel_insert_input = {|
-  data: Faction_insert_input,
-  on_conflict?: ?Faction_on_conflict,
-|};
-export type Faction_insert_input = {|
-  Bans?: ?Ban_arr_rel_insert_input,
-  Picks?: ?Pick_arr_rel_insert_input,
-  faction_id?: ?number,
-  name?: ?string,
-  url?: ?string,
-|};
-export type Ban_arr_rel_insert_input = {|
-  data: $ReadOnlyArray<Ban_insert_input>,
-  on_conflict?: ?Ban_on_conflict,
-|};
 export type Ban_insert_input = {|
   Faction?: ?Faction_arr_rel_insert_input,
   Game?: ?Game_obj_rel_insert_input,
@@ -62,20 +36,21 @@ export type Faction_arr_rel_insert_input = {|
   data: $ReadOnlyArray<Faction_insert_input>,
   on_conflict?: ?Faction_on_conflict,
 |};
-export type Faction_on_conflict = {|
-  constraint: Faction_constraint,
-  update_columns: $ReadOnlyArray<Faction_update_column>,
-  where?: ?Faction_bool_exp,
+export type Faction_insert_input = {|
+  Bans?: ?Ban_arr_rel_insert_input,
+  Picks?: ?Pick_arr_rel_insert_input,
+  faction_id?: ?number,
+  name?: ?string,
+  url?: ?string,
 |};
-export type Faction_bool_exp = {|
-  Bans?: ?Ban_bool_exp,
-  Picks?: ?Pick_bool_exp,
-  _and?: ?$ReadOnlyArray<Faction_bool_exp>,
-  _not?: ?Faction_bool_exp,
-  _or?: ?$ReadOnlyArray<Faction_bool_exp>,
-  faction_id?: ?Int_comparison_exp,
-  name?: ?String_comparison_exp,
-  url?: ?String_comparison_exp,
+export type Ban_arr_rel_insert_input = {|
+  data: $ReadOnlyArray<Ban_insert_input>,
+  on_conflict?: ?Ban_on_conflict,
+|};
+export type Ban_on_conflict = {|
+  constraint: Ban_constraint,
+  update_columns: $ReadOnlyArray<Ban_update_column>,
+  where?: ?Ban_bool_exp,
 |};
 export type Ban_bool_exp = {|
   Faction?: ?Faction_bool_exp,
@@ -89,6 +64,30 @@ export type Ban_bool_exp = {|
   factionId?: ?Int_comparison_exp,
   gameId?: ?Int_comparison_exp,
   gameuserId?: ?Int_comparison_exp,
+|};
+export type Faction_bool_exp = {|
+  Bans?: ?Ban_bool_exp,
+  Picks?: ?Pick_bool_exp,
+  _and?: ?$ReadOnlyArray<Faction_bool_exp>,
+  _not?: ?Faction_bool_exp,
+  _or?: ?$ReadOnlyArray<Faction_bool_exp>,
+  faction_id?: ?Int_comparison_exp,
+  name?: ?String_comparison_exp,
+  url?: ?String_comparison_exp,
+|};
+export type Pick_bool_exp = {|
+  Faction?: ?Faction_bool_exp,
+  Game?: ?Game_bool_exp,
+  GameUser?: ?GameUser_bool_exp,
+  GameUsers?: ?GameUser_bool_exp,
+  _and?: ?$ReadOnlyArray<Pick_bool_exp>,
+  _not?: ?Pick_bool_exp,
+  _or?: ?$ReadOnlyArray<Pick_bool_exp>,
+  factionId?: ?Int_comparison_exp,
+  gameId?: ?Int_comparison_exp,
+  gameuserId?: ?Int_comparison_exp,
+  pick_id?: ?Int_comparison_exp,
+  picked?: ?Boolean_comparison_exp,
 |};
 export type Game_bool_exp = {|
   Bans?: ?Ban_bool_exp,
@@ -132,42 +131,6 @@ export type GameUser_bool_exp = {|
   pickOrder?: ?Int_comparison_exp,
   seatNumber?: ?Int_comparison_exp,
   userId?: ?Int_comparison_exp,
-|};
-export type Pick_bool_exp = {|
-  Faction?: ?Faction_bool_exp,
-  Game?: ?Game_bool_exp,
-  GameUser?: ?GameUser_bool_exp,
-  GameUsers?: ?GameUser_bool_exp,
-  _and?: ?$ReadOnlyArray<Pick_bool_exp>,
-  _not?: ?Pick_bool_exp,
-  _or?: ?$ReadOnlyArray<Pick_bool_exp>,
-  factionId?: ?Int_comparison_exp,
-  gameId?: ?Int_comparison_exp,
-  gameuserId?: ?Int_comparison_exp,
-  pick_id?: ?Int_comparison_exp,
-  picked?: ?Boolean_comparison_exp,
-|};
-export type Int_comparison_exp = {|
-  _eq?: ?number,
-  _gt?: ?number,
-  _gte?: ?number,
-  _in?: ?$ReadOnlyArray<number>,
-  _is_null?: ?boolean,
-  _lt?: ?number,
-  _lte?: ?number,
-  _neq?: ?number,
-  _nin?: ?$ReadOnlyArray<number>,
-|};
-export type Boolean_comparison_exp = {|
-  _eq?: ?boolean,
-  _gt?: ?boolean,
-  _gte?: ?boolean,
-  _in?: ?$ReadOnlyArray<boolean>,
-  _is_null?: ?boolean,
-  _lt?: ?boolean,
-  _lte?: ?boolean,
-  _neq?: ?boolean,
-  _nin?: ?$ReadOnlyArray<boolean>,
 |};
 export type User_bool_exp = {|
   GameUsers?: ?GameUser_bool_exp,
@@ -213,6 +176,28 @@ export type String_comparison_exp = {|
   _regex?: ?string,
   _similar?: ?string,
 |};
+export type Int_comparison_exp = {|
+  _eq?: ?number,
+  _gt?: ?number,
+  _gte?: ?number,
+  _in?: ?$ReadOnlyArray<number>,
+  _is_null?: ?boolean,
+  _lt?: ?number,
+  _lte?: ?number,
+  _neq?: ?number,
+  _nin?: ?$ReadOnlyArray<number>,
+|};
+export type Boolean_comparison_exp = {|
+  _eq?: ?boolean,
+  _gt?: ?boolean,
+  _gte?: ?boolean,
+  _in?: ?$ReadOnlyArray<boolean>,
+  _is_null?: ?boolean,
+  _lt?: ?boolean,
+  _lte?: ?boolean,
+  _neq?: ?boolean,
+  _nin?: ?$ReadOnlyArray<boolean>,
+|};
 export type date_comparison_exp = {|
   _eq?: ?any,
   _gt?: ?any,
@@ -223,6 +208,30 @@ export type date_comparison_exp = {|
   _lte?: ?any,
   _neq?: ?any,
   _nin?: ?$ReadOnlyArray<any>,
+|};
+export type Pick_arr_rel_insert_input = {|
+  data: $ReadOnlyArray<Pick_insert_input>,
+  on_conflict?: ?Pick_on_conflict,
+|};
+export type Pick_insert_input = {|
+  Faction?: ?Faction_obj_rel_insert_input,
+  Game?: ?Game_obj_rel_insert_input,
+  GameUser?: ?GameUser_obj_rel_insert_input,
+  GameUsers?: ?GameUser_arr_rel_insert_input,
+  factionId?: ?number,
+  gameId?: ?number,
+  gameuserId?: ?number,
+  pick_id?: ?number,
+  picked?: ?boolean,
+|};
+export type Faction_obj_rel_insert_input = {|
+  data: Faction_insert_input,
+  on_conflict?: ?Faction_on_conflict,
+|};
+export type Faction_on_conflict = {|
+  constraint: Faction_constraint,
+  update_columns: $ReadOnlyArray<Faction_update_column>,
+  where?: ?Faction_bool_exp,
 |};
 export type Game_obj_rel_insert_input = {|
   data: Game_insert_input,
@@ -287,10 +296,6 @@ export type Pick_on_conflict = {|
   update_columns: $ReadOnlyArray<Pick_update_column>,
   where?: ?Pick_bool_exp,
 |};
-export type Pick_arr_rel_insert_input = {|
-  data: $ReadOnlyArray<Pick_insert_input>,
-  on_conflict?: ?Pick_on_conflict,
-|};
 export type User_obj_rel_insert_input = {|
   data: User_insert_input,
   on_conflict?: ?User_on_conflict,
@@ -339,32 +344,45 @@ export type Group_on_conflict = {|
   update_columns: $ReadOnlyArray<Group_update_column>,
   where?: ?Group_bool_exp,
 |};
-export type Ban_on_conflict = {|
-  constraint: Ban_constraint,
-  update_columns: $ReadOnlyArray<Ban_update_column>,
-  where?: ?Ban_bool_exp,
+export type InitGameBansMutationVariables = {|
+  object1: Ban_insert_input
 |};
-export type InitPicksMutationVariables = {|
-  objects: $ReadOnlyArray<Pick_insert_input>
-|};
-export type InitPicksMutationResponse = {|
-  +insert_Pick: ?{|
-    +affected_rows: number
+export type InitGameBansMutationResponse = {|
+  +insert_Ban_one: ?{|
+    +ban_id: number,
+    +banned: boolean,
+    +Faction: $ReadOnlyArray<{|
+      +name: string
+    |}>,
+    +GameUser: {|
+      +User: {|
+        +name: string
+      |}
+    |},
   |}
 |};
-export type InitPicksMutation = {|
-  variables: InitPicksMutationVariables,
-  response: InitPicksMutationResponse,
+export type InitGameBansMutation = {|
+  variables: InitGameBansMutationVariables,
+  response: InitGameBansMutationResponse,
 |};
 */
 
 
 /*
-mutation InitPicksMutation(
-  $objects: [Pick_insert_input!]!
+mutation InitGameBansMutation(
+  $object1: Ban_insert_input!
 ) {
-  insert_Pick(objects: $objects) {
-    affected_rows
+  insert_Ban_one(object: $object1) {
+    ban_id
+    banned
+    Faction {
+      name
+    }
+    GameUser {
+      User {
+        name
+      }
+    }
   }
 }
 */
@@ -374,29 +392,76 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "objects"
+    "name": "object1"
   }
 ],
 v1 = [
   {
     "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "name",
+    "storageKey": null
+  }
+],
+v2 = [
+  {
+    "alias": null,
     "args": [
       {
         "kind": "Variable",
-        "name": "objects",
-        "variableName": "objects"
+        "name": "object",
+        "variableName": "object1"
       }
     ],
-    "concreteType": "Pick_mutation_response",
+    "concreteType": "Ban",
     "kind": "LinkedField",
-    "name": "insert_Pick",
+    "name": "insert_Ban_one",
     "plural": false,
     "selections": [
       {
         "alias": null,
         "args": null,
         "kind": "ScalarField",
-        "name": "affected_rows",
+        "name": "ban_id",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "banned",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "Faction",
+        "kind": "LinkedField",
+        "name": "Faction",
+        "plural": true,
+        "selections": (v1/*: any*/),
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "GameUser",
+        "kind": "LinkedField",
+        "name": "GameUser",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "User",
+            "kind": "LinkedField",
+            "name": "User",
+            "plural": false,
+            "selections": (v1/*: any*/),
+            "storageKey": null
+          }
+        ],
         "storageKey": null
       }
     ],
@@ -408,8 +473,8 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "InitPicksMutation",
-    "selections": (v1/*: any*/),
+    "name": "InitGameBansMutation",
+    "selections": (v2/*: any*/),
     "type": "mutation_root",
     "abstractKey": null
   },
@@ -417,20 +482,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "InitPicksMutation",
-    "selections": (v1/*: any*/)
+    "name": "InitGameBansMutation",
+    "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "2c276d7ef9320753821968daac094822",
+    "cacheID": "0e4a63053a117e0a2875c323dcb81c40",
     "id": null,
     "metadata": {},
-    "name": "InitPicksMutation",
+    "name": "InitGameBansMutation",
     "operationKind": "mutation",
-    "text": "mutation InitPicksMutation(\n  $objects: [Pick_insert_input!]!\n) {\n  insert_Pick(objects: $objects) {\n    affected_rows\n  }\n}\n"
+    "text": "mutation InitGameBansMutation(\n  $object1: Ban_insert_input!\n) {\n  insert_Ban_one(object: $object1) {\n    ban_id\n    banned\n    Faction {\n      name\n    }\n    GameUser {\n      User {\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = '932a1b898d61db0b968c4b7cc1cbd2ab';
+(node/*: any*/).hash = 'a1728e477afd93c9000c7ffedbe7f975';
 
 module.exports = node;

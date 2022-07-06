@@ -9,11 +9,13 @@
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
 export type CreateGameMutationVariables = {|
+  name?: ?string,
   hsLabels?: ?string,
   mapString?: ?string,
   bansLower?: ?number,
   bansUpper?: ?number,
   groupId?: ?number,
+  game_created?: ?any,
 |};
 export type CreateGameMutationResponse = {|
   +insert_Game_one: ?{|
@@ -40,13 +42,15 @@ export type CreateGameMutation = {|
 
 /*
 mutation CreateGameMutation(
+  $name: String
   $hsLabels: String
   $mapString: String
   $bansLower: Int
   $bansUpper: Int
   $groupId: Int
+  $game_created: date
 ) {
-  insert_Game_one(object: {hsLabels: $hsLabels, mapString: $mapString, bansLower: $bansLower, bansUpper: $bansUpper, groupId: $groupId}) {
+  insert_Game_one(object: {name: $name, hsLabels: $hsLabels, mapString: $mapString, bansLower: $bansLower, bansUpper: $bansUpper, groupId: $groupId, gameCreated: $game_created}) {
     game_id
     gameAdmin
     availableSeats
@@ -77,19 +81,29 @@ v1 = {
 v2 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "groupId"
+  "name": "game_created"
 },
 v3 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "hsLabels"
+  "name": "groupId"
 },
 v4 = {
   "defaultValue": null,
   "kind": "LocalArgument",
+  "name": "hsLabels"
+},
+v5 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
   "name": "mapString"
 },
-v5 = [
+v6 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "name"
+},
+v7 = [
   {
     "alias": null,
     "args": [
@@ -107,6 +121,11 @@ v5 = [
           },
           {
             "kind": "Variable",
+            "name": "gameCreated",
+            "variableName": "game_created"
+          },
+          {
+            "kind": "Variable",
             "name": "groupId",
             "variableName": "groupId"
           },
@@ -119,6 +138,11 @@ v5 = [
             "kind": "Variable",
             "name": "mapString",
             "variableName": "mapString"
+          },
+          {
+            "kind": "Variable",
+            "name": "name",
+            "variableName": "name"
           }
         ],
         "kind": "ObjectValue",
@@ -225,39 +249,43 @@ return {
       (v1/*: any*/),
       (v2/*: any*/),
       (v3/*: any*/),
-      (v4/*: any*/)
+      (v4/*: any*/),
+      (v5/*: any*/),
+      (v6/*: any*/)
     ],
     "kind": "Fragment",
     "metadata": null,
     "name": "CreateGameMutation",
-    "selections": (v5/*: any*/),
+    "selections": (v7/*: any*/),
     "type": "mutation_root",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
     "argumentDefinitions": [
-      (v3/*: any*/),
+      (v6/*: any*/),
       (v4/*: any*/),
+      (v5/*: any*/),
       (v0/*: any*/),
       (v1/*: any*/),
+      (v3/*: any*/),
       (v2/*: any*/)
     ],
     "kind": "Operation",
     "name": "CreateGameMutation",
-    "selections": (v5/*: any*/)
+    "selections": (v7/*: any*/)
   },
   "params": {
-    "cacheID": "3eb4c1bf46f5da7e38bb20bd4dc4fafe",
+    "cacheID": "531496f6aea183098617524639edcb95",
     "id": null,
     "metadata": {},
     "name": "CreateGameMutation",
     "operationKind": "mutation",
-    "text": "mutation CreateGameMutation(\n  $hsLabels: String\n  $mapString: String\n  $bansLower: Int\n  $bansUpper: Int\n  $groupId: Int\n) {\n  insert_Game_one(object: {hsLabels: $hsLabels, mapString: $mapString, bansLower: $bansLower, bansUpper: $bansUpper, groupId: $groupId}) {\n    game_id\n    gameAdmin\n    availableSeats\n    bansDone\n    bansLower\n    bansUpper\n    draftStarted\n    groupId\n    hsLabels\n    mapString\n    picksDone\n    userPicking\n  }\n}\n"
+    "text": "mutation CreateGameMutation(\n  $name: String\n  $hsLabels: String\n  $mapString: String\n  $bansLower: Int\n  $bansUpper: Int\n  $groupId: Int\n  $game_created: date\n) {\n  insert_Game_one(object: {name: $name, hsLabels: $hsLabels, mapString: $mapString, bansLower: $bansLower, bansUpper: $bansUpper, groupId: $groupId, gameCreated: $game_created}) {\n    game_id\n    gameAdmin\n    availableSeats\n    bansDone\n    bansLower\n    bansUpper\n    draftStarted\n    groupId\n    hsLabels\n    mapString\n    picksDone\n    userPicking\n  }\n}\n"
   }
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = '92fe07541603788e26b94795230505ca';
+(node/*: any*/).hash = '282b74dac74495bbc5e0b4ed33e1e8be';
 
 module.exports = node;

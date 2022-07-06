@@ -22,27 +22,21 @@ export type Pick_constraint = "Pick_pkey" | "Pick_userId_unique" | "%future adde
 export type Pick_update_column = "factionId" | "gameId" | "gameuserId" | "pick_id" | "picked" | "%future added value";
 export type User_constraint = "User_auth0_id_key" | "User_id_key" | "User_pkey" | "%future added value";
 export type User_update_column = "auth0_id" | "email" | "groupId" | "name" | "password" | "user_id" | "%future added value";
-export type Pick_insert_input = {|
-  Faction?: ?Faction_obj_rel_insert_input,
-  Game?: ?Game_obj_rel_insert_input,
-  GameUser?: ?GameUser_obj_rel_insert_input,
-  GameUsers?: ?GameUser_arr_rel_insert_input,
-  factionId?: ?number,
-  gameId?: ?number,
-  gameuserId?: ?number,
-  pick_id?: ?number,
-  picked?: ?boolean,
-|};
-export type Faction_obj_rel_insert_input = {|
-  data: Faction_insert_input,
-  on_conflict?: ?Faction_on_conflict,
-|};
-export type Faction_insert_input = {|
+export type GameUser_insert_input = {|
   Bans?: ?Ban_arr_rel_insert_input,
+  Game?: ?Game_obj_rel_insert_input,
+  Games?: ?Game_arr_rel_insert_input,
+  Pick?: ?Pick_obj_rel_insert_input,
   Picks?: ?Pick_arr_rel_insert_input,
-  faction_id?: ?number,
-  name?: ?string,
-  url?: ?string,
+  User?: ?User_obj_rel_insert_input,
+  banningDone?: ?boolean,
+  gameId?: ?number,
+  gamesByGameadmin?: ?Game_arr_rel_insert_input,
+  gameuser_id?: ?number,
+  pickId?: ?number,
+  pickOrder?: ?number,
+  seatNumber?: ?number,
+  userId?: ?number,
 |};
 export type Ban_arr_rel_insert_input = {|
   data: $ReadOnlyArray<Ban_insert_input>,
@@ -60,6 +54,32 @@ export type Ban_insert_input = {|
 |};
 export type Faction_arr_rel_insert_input = {|
   data: $ReadOnlyArray<Faction_insert_input>,
+  on_conflict?: ?Faction_on_conflict,
+|};
+export type Faction_insert_input = {|
+  Bans?: ?Ban_arr_rel_insert_input,
+  Picks?: ?Pick_arr_rel_insert_input,
+  faction_id?: ?number,
+  name?: ?string,
+  url?: ?string,
+|};
+export type Pick_arr_rel_insert_input = {|
+  data: $ReadOnlyArray<Pick_insert_input>,
+  on_conflict?: ?Pick_on_conflict,
+|};
+export type Pick_insert_input = {|
+  Faction?: ?Faction_obj_rel_insert_input,
+  Game?: ?Game_obj_rel_insert_input,
+  GameUser?: ?GameUser_obj_rel_insert_input,
+  GameUsers?: ?GameUser_arr_rel_insert_input,
+  factionId?: ?number,
+  gameId?: ?number,
+  gameuserId?: ?number,
+  pick_id?: ?number,
+  picked?: ?boolean,
+|};
+export type Faction_obj_rel_insert_input = {|
+  data: Faction_insert_input,
   on_conflict?: ?Faction_on_conflict,
 |};
 export type Faction_on_conflict = {|
@@ -253,42 +273,36 @@ export type GameUser_obj_rel_insert_input = {|
   data: GameUser_insert_input,
   on_conflict?: ?GameUser_on_conflict,
 |};
-export type GameUser_insert_input = {|
-  Bans?: ?Ban_arr_rel_insert_input,
-  Game?: ?Game_obj_rel_insert_input,
-  Games?: ?Game_arr_rel_insert_input,
-  Pick?: ?Pick_obj_rel_insert_input,
-  Picks?: ?Pick_arr_rel_insert_input,
-  User?: ?User_obj_rel_insert_input,
-  banningDone?: ?boolean,
-  gameId?: ?number,
-  gamesByGameadmin?: ?Game_arr_rel_insert_input,
-  gameuser_id?: ?number,
-  pickId?: ?number,
-  pickOrder?: ?number,
-  seatNumber?: ?number,
-  userId?: ?number,
+export type GameUser_on_conflict = {|
+  constraint: GameUser_constraint,
+  update_columns: $ReadOnlyArray<GameUser_update_column>,
+  where?: ?GameUser_bool_exp,
 |};
-export type Game_arr_rel_insert_input = {|
-  data: $ReadOnlyArray<Game_insert_input>,
-  on_conflict?: ?Game_on_conflict,
+export type GameUser_arr_rel_insert_input = {|
+  data: $ReadOnlyArray<GameUser_insert_input>,
+  on_conflict?: ?GameUser_on_conflict,
 |};
 export type Game_on_conflict = {|
   constraint: Game_constraint,
   update_columns: $ReadOnlyArray<Game_update_column>,
   where?: ?Game_bool_exp,
 |};
-export type Pick_obj_rel_insert_input = {|
-  data: Pick_insert_input,
-  on_conflict?: ?Pick_on_conflict,
-|};
 export type Pick_on_conflict = {|
   constraint: Pick_constraint,
   update_columns: $ReadOnlyArray<Pick_update_column>,
   where?: ?Pick_bool_exp,
 |};
-export type Pick_arr_rel_insert_input = {|
-  data: $ReadOnlyArray<Pick_insert_input>,
+export type Ban_on_conflict = {|
+  constraint: Ban_constraint,
+  update_columns: $ReadOnlyArray<Ban_update_column>,
+  where?: ?Ban_bool_exp,
+|};
+export type Game_arr_rel_insert_input = {|
+  data: $ReadOnlyArray<Game_insert_input>,
+  on_conflict?: ?Game_on_conflict,
+|};
+export type Pick_obj_rel_insert_input = {|
+  data: Pick_insert_input,
   on_conflict?: ?Pick_on_conflict,
 |};
 export type User_obj_rel_insert_input = {|
@@ -304,15 +318,6 @@ export type User_insert_input = {|
   name?: ?string,
   password?: ?string,
   user_id?: ?number,
-|};
-export type GameUser_arr_rel_insert_input = {|
-  data: $ReadOnlyArray<GameUser_insert_input>,
-  on_conflict?: ?GameUser_on_conflict,
-|};
-export type GameUser_on_conflict = {|
-  constraint: GameUser_constraint,
-  update_columns: $ReadOnlyArray<GameUser_update_column>,
-  where?: ?GameUser_bool_exp,
 |};
 export type Group_obj_rel_insert_input = {|
   data: Group_insert_input,
@@ -339,32 +344,33 @@ export type Group_on_conflict = {|
   update_columns: $ReadOnlyArray<Group_update_column>,
   where?: ?Group_bool_exp,
 |};
-export type Ban_on_conflict = {|
-  constraint: Ban_constraint,
-  update_columns: $ReadOnlyArray<Ban_update_column>,
-  where?: ?Ban_bool_exp,
+export type PickButtonPickOrderMutationVariables = {|
+  objects: $ReadOnlyArray<GameUser_insert_input>
 |};
-export type InitPicksMutationVariables = {|
-  objects: $ReadOnlyArray<Pick_insert_input>
-|};
-export type InitPicksMutationResponse = {|
-  +insert_Pick: ?{|
-    +affected_rows: number
+export type PickButtonPickOrderMutationResponse = {|
+  +insert_GameUser: ?{|
+    +returning: $ReadOnlyArray<{|
+      +pickOrder: ?number,
+      +gameuser_id: number,
+    |}>
   |}
 |};
-export type InitPicksMutation = {|
-  variables: InitPicksMutationVariables,
-  response: InitPicksMutationResponse,
+export type PickButtonPickOrderMutation = {|
+  variables: PickButtonPickOrderMutationVariables,
+  response: PickButtonPickOrderMutationResponse,
 |};
 */
 
 
 /*
-mutation InitPicksMutation(
-  $objects: [Pick_insert_input!]!
+mutation PickButtonPickOrderMutation(
+  $objects: [GameUser_insert_input!]!
 ) {
-  insert_Pick(objects: $objects) {
-    affected_rows
+  insert_GameUser(objects: $objects, on_conflict: {constraint: GameUser_pkey, update_columns: pickOrder}) {
+    returning {
+      pickOrder
+      gameuser_id
+    }
   }
 }
 */
@@ -385,18 +391,44 @@ v1 = [
         "kind": "Variable",
         "name": "objects",
         "variableName": "objects"
+      },
+      {
+        "kind": "Literal",
+        "name": "on_conflict",
+        "value": {
+          "constraint": "GameUser_pkey",
+          "update_columns": "pickOrder"
+        }
       }
     ],
-    "concreteType": "Pick_mutation_response",
+    "concreteType": "GameUser_mutation_response",
     "kind": "LinkedField",
-    "name": "insert_Pick",
+    "name": "insert_GameUser",
     "plural": false,
     "selections": [
       {
         "alias": null,
         "args": null,
-        "kind": "ScalarField",
-        "name": "affected_rows",
+        "concreteType": "GameUser",
+        "kind": "LinkedField",
+        "name": "returning",
+        "plural": true,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "pickOrder",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "gameuser_id",
+            "storageKey": null
+          }
+        ],
         "storageKey": null
       }
     ],
@@ -408,7 +440,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "InitPicksMutation",
+    "name": "PickButtonPickOrderMutation",
     "selections": (v1/*: any*/),
     "type": "mutation_root",
     "abstractKey": null
@@ -417,20 +449,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "InitPicksMutation",
+    "name": "PickButtonPickOrderMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "2c276d7ef9320753821968daac094822",
+    "cacheID": "010990f3fa3004b07360d57223afee85",
     "id": null,
     "metadata": {},
-    "name": "InitPicksMutation",
+    "name": "PickButtonPickOrderMutation",
     "operationKind": "mutation",
-    "text": "mutation InitPicksMutation(\n  $objects: [Pick_insert_input!]!\n) {\n  insert_Pick(objects: $objects) {\n    affected_rows\n  }\n}\n"
+    "text": "mutation PickButtonPickOrderMutation(\n  $objects: [GameUser_insert_input!]!\n) {\n  insert_GameUser(objects: $objects, on_conflict: {constraint: GameUser_pkey, update_columns: pickOrder}) {\n    returning {\n      pickOrder\n      gameuser_id\n    }\n  }\n}\n"
   }
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = '932a1b898d61db0b968c4b7cc1cbd2ab';
+(node/*: any*/).hash = 'caf6e9487b78550bf9fd540e4224ee81';
 
 module.exports = node;

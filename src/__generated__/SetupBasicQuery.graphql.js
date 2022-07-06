@@ -8,11 +8,11 @@
 
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
-export type LayoutGridBasicQueryVariables = {|
-  gameId?: ?number,
+export type SetupBasicQueryVariables = {|
   auth0Id?: ?string,
+  gameUserId?: ?number,
 |};
-export type LayoutGridBasicQueryResponse = {|
+export type SetupBasicQueryResponse = {|
   +User: $ReadOnlyArray<{|
     +auth0_id: string,
     +groupId: ?number,
@@ -25,22 +25,17 @@ export type LayoutGridBasicQueryResponse = {|
       +pickId: ?number,
       +pickOrder: ?number,
       +seatNumber: ?number,
+      +userId: number,
       +Bans: $ReadOnlyArray<{|
         +ban_id: number,
         +banned: boolean,
-        +Faction: $ReadOnlyArray<{|
-          +name: string,
-          +url: string,
-          +faction_id: number,
-        |}>,
       |}>,
       +Pick: ?{|
-        +factionId: number,
         +pick_id: number,
         +picked: boolean,
         +Faction: {|
-          +name: string,
           +faction_id: number,
+          +name: string,
           +url: string,
         |},
       |},
@@ -51,70 +46,51 @@ export type LayoutGridBasicQueryResponse = {|
         +bansUpper: ?number,
         +draftStarted: ?boolean,
         +gameAdmin: ?number,
-        +gameCreated: ?any,
         +game_id: number,
         +groupId: ?number,
         +hsLabels: ?string,
         +mapString: ?string,
-        +name: ?string,
         +picksDone: ?boolean,
         +userPicking: ?number,
-        +GameUsers: $ReadOnlyArray<{|
-          +userId: number,
-          +gameuser_id: number,
-          +banningDone: boolean,
-          +pickOrder: ?number,
-          +seatNumber: ?number,
-        |}>,
-        +Bans: $ReadOnlyArray<{|
-          +banned: boolean,
-          +ban_id: number,
-          +factionId: number,
-        |}>,
       |},
     |}>,
   |}>
 |};
-export type LayoutGridBasicQuery = {|
-  variables: LayoutGridBasicQueryVariables,
-  response: LayoutGridBasicQueryResponse,
+export type SetupBasicQuery = {|
+  variables: SetupBasicQueryVariables,
+  response: SetupBasicQueryResponse,
 |};
 */
 
 
 /*
-query LayoutGridBasicQuery(
-  $gameId: Int
+query SetupBasicQuery(
   $auth0Id: String
+  $gameUserId: Int
 ) {
   User(where: {auth0_id: {_eq: $auth0Id}}) {
     auth0_id
     groupId
     name
     user_id
-    GameUsers(where: {Game: {game_id: {_eq: $gameId}}}) {
+    GameUsers(where: {gameuser_id: {_eq: $gameUserId}}) {
       banningDone
       gameId
       gameuser_id
       pickId
       pickOrder
       seatNumber
+      userId
       Bans {
         ban_id
         banned
-        Faction {
-          name
-          url
-          faction_id
-        }
       }
       Pick {
-        factionId
         pick_id
         picked
         Faction {
-          name
           faction_id
+          name
           url
         }
       }
@@ -125,26 +101,12 @@ query LayoutGridBasicQuery(
         bansUpper
         draftStarted
         gameAdmin
-        gameCreated
         game_id
         groupId
         hsLabels
         mapString
-        name
         picksDone
         userPicking
-        GameUsers {
-          userId
-          gameuser_id
-          banningDone
-          pickOrder
-          seatNumber
-        }
-        Bans {
-          banned
-          ban_id
-          factionId
-        }
       }
     }
   }
@@ -152,94 +114,33 @@ query LayoutGridBasicQuery(
 */
 
 const node/*: ConcreteRequest*/ = (function(){
-var v0 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "auth0Id"
-},
+var v0 = [
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "auth0Id"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "gameUserId"
+  }
+],
 v1 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "gameId"
-},
-v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "groupId",
   "storageKey": null
 },
-v3 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "banningDone",
-  "storageKey": null
-},
-v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "gameuser_id",
-  "storageKey": null
-},
-v6 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "pickOrder",
-  "storageKey": null
-},
-v7 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "seatNumber",
-  "storageKey": null
-},
-v8 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "ban_id",
-  "storageKey": null
-},
-v9 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "banned",
-  "storageKey": null
-},
-v10 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "url",
-  "storageKey": null
-},
-v11 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "faction_id",
-  "storageKey": null
-},
-v12 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "factionId",
-  "storageKey": null
-},
-v13 = [
+v3 = [
   {
     "alias": null,
     "args": [
@@ -273,8 +174,8 @@ v13 = [
         "name": "auth0_id",
         "storageKey": null
       },
+      (v1/*: any*/),
       (v2/*: any*/),
-      (v3/*: any*/),
       {
         "alias": null,
         "args": null,
@@ -290,19 +191,13 @@ v13 = [
               {
                 "fields": [
                   {
-                    "fields": [
-                      {
-                        "kind": "Variable",
-                        "name": "_eq",
-                        "variableName": "gameId"
-                      }
-                    ],
-                    "kind": "ObjectValue",
-                    "name": "game_id"
+                    "kind": "Variable",
+                    "name": "_eq",
+                    "variableName": "gameUserId"
                   }
                 ],
                 "kind": "ObjectValue",
-                "name": "Game"
+                "name": "gameuser_id"
               }
             ],
             "kind": "ObjectValue",
@@ -314,7 +209,13 @@ v13 = [
         "name": "GameUsers",
         "plural": true,
         "selections": [
-          (v4/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "banningDone",
+            "storageKey": null
+          },
           {
             "alias": null,
             "args": null,
@@ -322,7 +223,13 @@ v13 = [
             "name": "gameId",
             "storageKey": null
           },
-          (v5/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "gameuser_id",
+            "storageKey": null
+          },
           {
             "alias": null,
             "args": null,
@@ -330,8 +237,27 @@ v13 = [
             "name": "pickId",
             "storageKey": null
           },
-          (v6/*: any*/),
-          (v7/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "pickOrder",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "seatNumber",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "userId",
+            "storageKey": null
+          },
           {
             "alias": null,
             "args": null,
@@ -340,20 +266,18 @@ v13 = [
             "name": "Bans",
             "plural": true,
             "selections": [
-              (v8/*: any*/),
-              (v9/*: any*/),
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "Faction",
-                "kind": "LinkedField",
-                "name": "Faction",
-                "plural": true,
-                "selections": [
-                  (v3/*: any*/),
-                  (v10/*: any*/),
-                  (v11/*: any*/)
-                ],
+                "kind": "ScalarField",
+                "name": "ban_id",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "banned",
                 "storageKey": null
               }
             ],
@@ -367,7 +291,6 @@ v13 = [
             "name": "Pick",
             "plural": false,
             "selections": [
-              (v12/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -390,9 +313,21 @@ v13 = [
                 "name": "Faction",
                 "plural": false,
                 "selections": [
-                  (v3/*: any*/),
-                  (v11/*: any*/),
-                  (v10/*: any*/)
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "faction_id",
+                    "storageKey": null
+                  },
+                  (v2/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "url",
+                    "storageKey": null
+                  }
                 ],
                 "storageKey": null
               }
@@ -453,17 +388,10 @@ v13 = [
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
-                "name": "gameCreated",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
                 "name": "game_id",
                 "storageKey": null
               },
-              (v2/*: any*/),
+              (v1/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -478,7 +406,6 @@ v13 = [
                 "name": "mapString",
                 "storageKey": null
               },
-              (v3/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -491,42 +418,6 @@ v13 = [
                 "args": null,
                 "kind": "ScalarField",
                 "name": "userPicking",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "GameUser",
-                "kind": "LinkedField",
-                "name": "GameUsers",
-                "plural": true,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "userId",
-                    "storageKey": null
-                  },
-                  (v5/*: any*/),
-                  (v4/*: any*/),
-                  (v6/*: any*/),
-                  (v7/*: any*/)
-                ],
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Ban",
-                "kind": "LinkedField",
-                "name": "Bans",
-                "plural": true,
-                "selections": [
-                  (v9/*: any*/),
-                  (v8/*: any*/),
-                  (v12/*: any*/)
-                ],
                 "storageKey": null
               }
             ],
@@ -541,38 +432,32 @@ v13 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": [
-      (v0/*: any*/),
-      (v1/*: any*/)
-    ],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "LayoutGridBasicQuery",
-    "selections": (v13/*: any*/),
+    "name": "SetupBasicQuery",
+    "selections": (v3/*: any*/),
     "type": "query_root",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [
-      (v1/*: any*/),
-      (v0/*: any*/)
-    ],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "LayoutGridBasicQuery",
-    "selections": (v13/*: any*/)
+    "name": "SetupBasicQuery",
+    "selections": (v3/*: any*/)
   },
   "params": {
-    "cacheID": "438f20d8eb34fa2788e0793d4b22ee69",
+    "cacheID": "c9c415071f2b84f34593637c805cf4d4",
     "id": null,
     "metadata": {},
-    "name": "LayoutGridBasicQuery",
+    "name": "SetupBasicQuery",
     "operationKind": "query",
-    "text": "query LayoutGridBasicQuery(\n  $gameId: Int\n  $auth0Id: String\n) {\n  User(where: {auth0_id: {_eq: $auth0Id}}) {\n    auth0_id\n    groupId\n    name\n    user_id\n    GameUsers(where: {Game: {game_id: {_eq: $gameId}}}) {\n      banningDone\n      gameId\n      gameuser_id\n      pickId\n      pickOrder\n      seatNumber\n      Bans {\n        ban_id\n        banned\n        Faction {\n          name\n          url\n          faction_id\n        }\n      }\n      Pick {\n        factionId\n        pick_id\n        picked\n        Faction {\n          name\n          faction_id\n          url\n        }\n      }\n      Game {\n        availableSeats\n        bansDone\n        bansLower\n        bansUpper\n        draftStarted\n        gameAdmin\n        gameCreated\n        game_id\n        groupId\n        hsLabels\n        mapString\n        name\n        picksDone\n        userPicking\n        GameUsers {\n          userId\n          gameuser_id\n          banningDone\n          pickOrder\n          seatNumber\n        }\n        Bans {\n          banned\n          ban_id\n          factionId\n        }\n      }\n    }\n  }\n}\n"
+    "text": "query SetupBasicQuery(\n  $auth0Id: String\n  $gameUserId: Int\n) {\n  User(where: {auth0_id: {_eq: $auth0Id}}) {\n    auth0_id\n    groupId\n    name\n    user_id\n    GameUsers(where: {gameuser_id: {_eq: $gameUserId}}) {\n      banningDone\n      gameId\n      gameuser_id\n      pickId\n      pickOrder\n      seatNumber\n      userId\n      Bans {\n        ban_id\n        banned\n      }\n      Pick {\n        pick_id\n        picked\n        Faction {\n          faction_id\n          name\n          url\n        }\n      }\n      Game {\n        availableSeats\n        bansDone\n        bansLower\n        bansUpper\n        draftStarted\n        gameAdmin\n        game_id\n        groupId\n        hsLabels\n        mapString\n        picksDone\n        userPicking\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = '5a2d651742453fe0d4c9f593e132f71f';
+(node/*: any*/).hash = '47c2a31bd181fd81eac9fae7581da634';
 
 module.exports = node;

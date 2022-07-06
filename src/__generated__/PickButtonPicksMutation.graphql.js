@@ -344,27 +344,39 @@ export type Ban_on_conflict = {|
   update_columns: $ReadOnlyArray<Ban_update_column>,
   where?: ?Ban_bool_exp,
 |};
-export type InitPicksMutationVariables = {|
+export type PickButtonPicksMutationVariables = {|
   objects: $ReadOnlyArray<Pick_insert_input>
 |};
-export type InitPicksMutationResponse = {|
+export type PickButtonPicksMutationResponse = {|
   +insert_Pick: ?{|
-    +affected_rows: number
+    +returning: $ReadOnlyArray<{|
+      +factionId: number,
+      +gameId: number,
+      +gameuserId: ?number,
+      +pick_id: number,
+      +picked: boolean,
+    |}>
   |}
 |};
-export type InitPicksMutation = {|
-  variables: InitPicksMutationVariables,
-  response: InitPicksMutationResponse,
+export type PickButtonPicksMutation = {|
+  variables: PickButtonPicksMutationVariables,
+  response: PickButtonPicksMutationResponse,
 |};
 */
 
 
 /*
-mutation InitPicksMutation(
+mutation PickButtonPicksMutation(
   $objects: [Pick_insert_input!]!
 ) {
   insert_Pick(objects: $objects) {
-    affected_rows
+    returning {
+      factionId
+      gameId
+      gameuserId
+      pick_id
+      picked
+    }
   }
 }
 */
@@ -395,8 +407,47 @@ v1 = [
       {
         "alias": null,
         "args": null,
-        "kind": "ScalarField",
-        "name": "affected_rows",
+        "concreteType": "Pick",
+        "kind": "LinkedField",
+        "name": "returning",
+        "plural": true,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "factionId",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "gameId",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "gameuserId",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "pick_id",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "picked",
+            "storageKey": null
+          }
+        ],
         "storageKey": null
       }
     ],
@@ -408,7 +459,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "InitPicksMutation",
+    "name": "PickButtonPicksMutation",
     "selections": (v1/*: any*/),
     "type": "mutation_root",
     "abstractKey": null
@@ -417,20 +468,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "InitPicksMutation",
+    "name": "PickButtonPicksMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "2c276d7ef9320753821968daac094822",
+    "cacheID": "af09c6e1a32c4c4c8775333029c2f577",
     "id": null,
     "metadata": {},
-    "name": "InitPicksMutation",
+    "name": "PickButtonPicksMutation",
     "operationKind": "mutation",
-    "text": "mutation InitPicksMutation(\n  $objects: [Pick_insert_input!]!\n) {\n  insert_Pick(objects: $objects) {\n    affected_rows\n  }\n}\n"
+    "text": "mutation PickButtonPicksMutation(\n  $objects: [Pick_insert_input!]!\n) {\n  insert_Pick(objects: $objects) {\n    returning {\n      factionId\n      gameId\n      gameuserId\n      pick_id\n      picked\n    }\n  }\n}\n"
   }
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = '932a1b898d61db0b968c4b7cc1cbd2ab';
+(node/*: any*/).hash = 'f2dbad2a6aa574559cafabc0fb99f7ff';
 
 module.exports = node;

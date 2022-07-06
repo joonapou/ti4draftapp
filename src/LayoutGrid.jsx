@@ -6,14 +6,13 @@ import PickOrder from './PickOrder.jsx'
 import Picks from './Picks.jsx'
 import PickButton from './PickButton.jsx'
 import Galaxy from './Galaxy.js'
-import Group from './Group.js'
-import CreateGame from './CreateGame.js'
 import graphql from 'babel-plugin-relay/macro';
 import RelayEnvironment from './RelayEnvironment';
 import Typography from '@material-ui/core/Typography';
 import { useState, useEffect } from 'react';
 import {Suspense} from 'react';
 import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
+import {useParams, useHistory, useLocation} from 'react-router-dom';
 import {
   RelayEnvironmentProvider,
   loadQuery,
@@ -33,30 +32,35 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
   const LayoutGridBasicQuery = graphql `
-  query LayoutGridBasicQuery($auth0Id: String, $gameUserId: Int) {
-   User(where: {auth0_id: {_eq: $auth0Id}}) {
+  query LayoutGridBasicQuery($gameId: Int, $auth0Id: String) {
+  User(where: {auth0_id: {_eq: $auth0Id}}) {
     auth0_id
     groupId
     name
     user_id
-    GameUsers(where: {gameuser_id: {_eq: $gameUserId}}) {
+    GameUsers(where: {Game: {game_id: {_eq: $gameId}}}) {
       banningDone
       gameId
       gameuser_id
       pickId
       pickOrder
       seatNumber
-      userId
       Bans {
         ban_id
         banned
+        Faction {
+          name
+          url
+          faction_id
+        }
       }
       Pick {
+        factionId
         pick_id
         picked
         Faction {
-          faction_id
           name
+          faction_id
           url
         }
       }
@@ -67,43 +71,53 @@ const useStyles = makeStyles((theme) => ({
         bansUpper
         draftStarted
         gameAdmin
+        gameCreated
         game_id
         groupId
         hsLabels
         mapString
+        name
         picksDone
         userPicking
+        GameUsers {
+          userId
+          gameuser_id
+          banningDone
+          pickOrder
+          seatNumber
+        }
+        Bans {
+          banned
+          ban_id
+          factionId
+        }
       }
     }
   }
 }`;
 
-const preloadedQuery = loadQuery(RelayEnvironment, LayoutGridBasicQuery, {
-  auth0Id: localStorage.getItem('auth0:id_token:sub'),
-  gameUserId: localStorage.getItem('gameuserId')
-});
-   function FormMidRow({data}) {
+   function FormMidRow(data) {
     const classes = useStyles();
     return (
       <React.Fragment>
-        <Grid item xs={4}>
+       <Grid item xs={4}>
           <Paper className={classes.paper}><PickButton data={data}/></Paper>
         </Grid>
         <Grid item xs={4}>
           <Paper className={classes.paper}><Galaxy data={data}/></Paper>
         </Grid>
         <Grid item xs={4} >
-          <Paper className={classes.paper}><PickOrder/> </Paper>
+          <Paper className={classes.paper}><PickOrder data={data}/> </Paper>
         </Grid>
       </React.Fragment>
     );
   }
-   function FormBottomRow({data}) {
+   function FormBottomRow(data) {
     const classes = useStyles();
     return (
       <React.Fragment>
         <Grid item xs={8}>
-          <Paper className={classes.paper}><Picks/></Paper>
+          <Paper className={classes.paper}><Picks data={data}/></Paper>
         </Grid>
         <Grid item xs={4}>
           <Paper className={classes.paper}>User Info</Paper>
@@ -115,53 +129,29 @@ const preloadedQuery = loadQuery(RelayEnvironment, LayoutGridBasicQuery, {
 function LayoutGridChild(props) {
  const classes = useStyles();
  const {user} = useAuth0();
- if (localStorage.getItem('gameuserId') === null){
-  localStorage.setItem('gameuserId', -1)
- }
- const data = usePreloadedQuery(LayoutGridBasicQuery, props.preloadedQuery)
- var auth0Id = user
- console.log(user.sub)
- localStorage.setItem('auth0:id_token:sub', user.sub)
- if(data.User[0].groupId !== null){
-  if(data.User[0].GameUsers.length === 1){
-    console.log("1")
-    return (
-    <div className={classes.root}>
-        <Grid container spacing={3}>
-          <FormMidRow data={data}/>
-        </Grid>
-        <Grid container spacing={3}>
-          <FormBottomRow data={data}/>
-        </Grid>
-    </div>
-    )
-  } else if (data.User[0].GameUsers.length >1){
-    console.log("2")
-    return(
-      <Typography variant="h6" className={classes.title}>
-                handle multiple games
-              </Typography>
-      )
-    
-  } else {
-    console.log("3")
-    return(
-      // join or create a game
-    <CreateGame data={data}/>
-    )
-  }
-  } else {
-    console.log("4")
-    return(
-    <Group data={data}/>
-      )
-  }
+ var history = useHistory();
+ console.log("history", history)
+ const gameId = history.location.state ? history.location.state.gameId : window.sessionStorage.getItem("gameId")
+ var id = 1
+ const data = useLazyLoadQuery(LayoutGridBasicQuery, {
+  auth0Id: user.sub,
+  gameId: gameId})
+  return (
+  <div className={classes.root}>
+      <Grid container spacing={3}>
+        <FormMidRow data={data}/>
+      </Grid>
+      <Grid container spacing={3}>
+        <FormBottomRow data={data}/>
+      </Grid>
+  </div>
+  )
 }
 export default function LayoutGrid(props){
   return (
   <RelayEnvironmentProvider environment={RelayEnvironment}>
     <Suspense fallback={'Loading...'}>
-      <LayoutGridChild preloadedQuery={preloadedQuery}/>
+      <LayoutGridChild/>
     </Suspense>
   </RelayEnvironmentProvider>
   );

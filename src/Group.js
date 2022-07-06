@@ -21,6 +21,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import Alert from '@material-ui/lab/Alert';
 import {useState} from 'react'
+import { useAuth0} from "@auth0/auth0-react";
 import  { encrypt , decrypt } from 'react-crypt-gsm';
 import {
   RelayEnvironmentProvider,
@@ -101,18 +102,17 @@ function a11yProps(index) {
 const preloadedQuery = loadQuery(RelayEnvironment, GroupQuery, {
 });
 
-const auth0Id = localStorage.getItem('auth0:id_token:sub')
 function RunMutation(environment: Environment,
-  object, mutation, callback) {
+  object, mutation, callback, user) {
   return commitMutation(environment, {
     mutation: mutation,
     variables: object,
-    onCompleted: response => {callback(auth0Id,response)} /* Mutation completed */,
+    onCompleted: response => {callback(response, user)} /* Mutation completed */,
     onError: error => {console.log(error)} /* Mutation errored */,
   });
 }
 const refresh = (response) => {window.location.reload()}
-function handleCreateSubmit(e, data, refresh){
+function handleCreateSubmit(e, data, refresh, user){
 	e.preventDefault();
 	var group_name = e.target[0].value
 	var group_password = encrypt(e.target[1].value).content
@@ -121,10 +121,10 @@ function handleCreateSubmit(e, data, refresh){
 		groupPassword: group_password,
 	}
 	console.log(mutation_object)
-  const addGroupIdToUser = (auth0Id, response) => {
+  const addGroupIdToUser = (response, user) => {
     var group_id = response.insert_Group_one.group_id
     var object = {
-      auth0Id: auth0Id,
+      auth0Id: user.sub,
       groupId: group_id
     }
     RunMutation(RelayEnvironment, object, GroupUserMutation, refresh)
@@ -132,11 +132,11 @@ function handleCreateSubmit(e, data, refresh){
 	RunMutation(RelayEnvironment, mutation_object, GroupMutation, refresh)
   
 }
-function handleJoinSubmit(e, group, refresh, groupalert, emptypasswordalert, wrongpasswordalert){
+function handleJoinSubmit(e, group, refresh, groupalert, emptypasswordalert, wrongpasswordalert, user){
   if(groupalert === false && emptypasswordalert === false  && wrongpasswordalert === false){
      console.log("1", groupalert, emptypasswordalert, wrongpasswordalert)
     var object = {
-      auth0Id: auth0Id,
+      auth0Id: user.sub,
       groupId: group.group_id
     }
     RunMutation(RelayEnvironment, object, GroupUserMutation, refresh)
@@ -146,10 +146,11 @@ function handleJoinSubmit(e, group, refresh, groupalert, emptypasswordalert, wro
 }
 function CreateGroupView({data}){
    const classes = useStyles();
+   const {user} = useAuth0();
   return (
     <div className={classes.root} text-align='center'>
     <Grid container  spacing={1} alignItems="center" alignContent="center" direction="column">
-    <form onSubmit={(e)=> {handleCreateSubmit(e, data, refresh)}}>
+    <form onSubmit={(e)=> {handleCreateSubmit(e, data, refresh, user)}}>
       <Grid item>
     <Typography variant="h5" className={classes.title}>Create a group</Typography>
     </Grid>
@@ -177,6 +178,7 @@ function CreateGroupView({data}){
   );
 }
 function JoinGroupView({groupdata}){
+  const {user} = useAuth0();
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(1);
   const [group, setGroup] = useState(null);
@@ -247,7 +249,7 @@ function JoinGroupView({groupdata}){
               setWrongPasswordAlert(true)
             }
             else {
-              handleJoinSubmit(e, group, refresh, groupalert, emptypasswordalert, wrongpasswordalert)
+              handleJoinSubmit(e, group, refresh, groupalert, emptypasswordalert, wrongpasswordalert, user)
             }
 
             

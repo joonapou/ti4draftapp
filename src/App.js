@@ -6,12 +6,12 @@ import  Loading  from "./components/loading.js";
 import  Home  from "./Home/Home.js";
 import LayoutGrid from './LayoutGrid.jsx'
 import ProtectedRoute from "./auth/protected-route.js";
+import Setup from './Setup.js'
 
 import "./App.css";
 
 const App = () => {
   const { isLoading } = useAuth0();
-
   if (isLoading) {
     return <Loading />;
   }
@@ -22,6 +22,7 @@ const App = () => {
         <Switch>
           <Route path="/" exact component={Home} />
           <ProtectedRoute path="/game" component={LayoutGrid} />
+          <ProtectedRoute path="/setup" component={Setup} />
         </Switch>
       </div>
     </div>

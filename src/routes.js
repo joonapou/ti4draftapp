@@ -49,7 +49,6 @@ const provideClient = (component) => {
 const auth = new Auth();
 
 const handleAuthentication = ({location}) => {
-  console.log("handleauth2222")
   if (/access_token|id_token|error/.test(location.hash)) {
     auth.handleAuthentication();
   }
@@ -65,9 +64,9 @@ export const makeMainRoutes = () => {
         <Route
           path="/home"
           render={(props) => provideClient(<Home auth={auth} {...props} />)} />
-          {/*<Route
+          <Route
           path="/game"
-          render={(props) => provideClient(<LayoutGrid auth={auth} {...props} />)} />*/}
+          render={(props) => {return <LayoutGrid auth={auth} {...props} />}} />
         <Route path="/callback" render={(props) => {
           handleAuthentication(props);
           return <Callback {...props}/>

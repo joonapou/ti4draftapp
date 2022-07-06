@@ -1,0 +1,4400 @@
+schema {
+  query: query_root
+  mutation: mutation_root
+  subscription: subscription_root
+}
+
+"""whether this query should be cached (Hasura Cloud only)"""
+directive @cached(
+  """measured in seconds"""
+  ttl: Int! = 60
+
+  """refresh the cache entry"""
+  refresh: Boolean! = false
+) on QUERY
+
+"""
+columns and relationships of "Ban"
+"""
+type Ban {
+  """An array relationship"""
+  Faction(
+    """distinct select on columns"""
+    distinct_on: [Faction_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Faction_order_by!]
+
+    """filter the rows returned"""
+    where: Faction_bool_exp
+  ): [Faction!]!
+
+  """An aggregate relationship"""
+  Faction_aggregate(
+    """distinct select on columns"""
+    distinct_on: [Faction_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Faction_order_by!]
+
+    """filter the rows returned"""
+    where: Faction_bool_exp
+  ): Faction_aggregate!
+
+  """An object relationship"""
+  Game: Game!
+
+  """An object relationship"""
+  GameUser: GameUser!
+  ban_id: Int!
+  banned: Boolean!
+  factionId: Int!
+  gameId: Int!
+  gameuserId: Int!
+}
+
+"""
+aggregated selection of "Ban"
+"""
+type Ban_aggregate {
+  aggregate: Ban_aggregate_fields
+  nodes: [Ban!]!
+}
+
+"""
+aggregate fields of "Ban"
+"""
+type Ban_aggregate_fields {
+  avg: Ban_avg_fields
+  count(columns: [Ban_select_column!], distinct: Boolean): Int!
+  max: Ban_max_fields
+  min: Ban_min_fields
+  stddev: Ban_stddev_fields
+  stddev_pop: Ban_stddev_pop_fields
+  stddev_samp: Ban_stddev_samp_fields
+  sum: Ban_sum_fields
+  var_pop: Ban_var_pop_fields
+  var_samp: Ban_var_samp_fields
+  variance: Ban_variance_fields
+}
+
+"""
+order by aggregate values of table "Ban"
+"""
+input Ban_aggregate_order_by {
+  avg: Ban_avg_order_by
+  count: order_by
+  max: Ban_max_order_by
+  min: Ban_min_order_by
+  stddev: Ban_stddev_order_by
+  stddev_pop: Ban_stddev_pop_order_by
+  stddev_samp: Ban_stddev_samp_order_by
+  sum: Ban_sum_order_by
+  var_pop: Ban_var_pop_order_by
+  var_samp: Ban_var_samp_order_by
+  variance: Ban_variance_order_by
+}
+
+"""
+input type for inserting array relation for remote table "Ban"
+"""
+input Ban_arr_rel_insert_input {
+  data: [Ban_insert_input!]!
+
+  """on conflict condition"""
+  on_conflict: Ban_on_conflict
+}
+
+"""aggregate avg on columns"""
+type Ban_avg_fields {
+  ban_id: Float
+  factionId: Float
+  gameId: Float
+  gameuserId: Float
+}
+
+"""
+order by avg() on columns of table "Ban"
+"""
+input Ban_avg_order_by {
+  ban_id: order_by
+  factionId: order_by
+  gameId: order_by
+  gameuserId: order_by
+}
+
+"""
+Boolean expression to filter rows from the table "Ban". All fields are combined with a logical 'AND'.
+"""
+input Ban_bool_exp {
+  Faction: Faction_bool_exp
+  Game: Game_bool_exp
+  GameUser: GameUser_bool_exp
+  _and: [Ban_bool_exp!]
+  _not: Ban_bool_exp
+  _or: [Ban_bool_exp!]
+  ban_id: Int_comparison_exp
+  banned: Boolean_comparison_exp
+  factionId: Int_comparison_exp
+  gameId: Int_comparison_exp
+  gameuserId: Int_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "Ban"
+"""
+enum Ban_constraint {
+  """unique or primary key constraint"""
+  Ban_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "Ban"
+"""
+input Ban_inc_input {
+  ban_id: Int
+  factionId: Int
+  gameId: Int
+  gameuserId: Int
+}
+
+"""
+input type for inserting data into table "Ban"
+"""
+input Ban_insert_input {
+  Faction: Faction_arr_rel_insert_input
+  Game: Game_obj_rel_insert_input
+  GameUser: GameUser_obj_rel_insert_input
+  ban_id: Int
+  banned: Boolean
+  factionId: Int
+  gameId: Int
+  gameuserId: Int
+}
+
+"""aggregate max on columns"""
+type Ban_max_fields {
+  ban_id: Int
+  factionId: Int
+  gameId: Int
+  gameuserId: Int
+}
+
+"""
+order by max() on columns of table "Ban"
+"""
+input Ban_max_order_by {
+  ban_id: order_by
+  factionId: order_by
+  gameId: order_by
+  gameuserId: order_by
+}
+
+"""aggregate min on columns"""
+type Ban_min_fields {
+  ban_id: Int
+  factionId: Int
+  gameId: Int
+  gameuserId: Int
+}
+
+"""
+order by min() on columns of table "Ban"
+"""
+input Ban_min_order_by {
+  ban_id: order_by
+  factionId: order_by
+  gameId: order_by
+  gameuserId: order_by
+}
+
+"""
+response of any mutation on the table "Ban"
+"""
+type Ban_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [Ban!]!
+}
+
+"""
+on conflict condition type for table "Ban"
+"""
+input Ban_on_conflict {
+  constraint: Ban_constraint!
+  update_columns: [Ban_update_column!]! = []
+  where: Ban_bool_exp
+}
+
+"""Ordering options when selecting data from "Ban"."""
+input Ban_order_by {
+  Faction_aggregate: Faction_aggregate_order_by
+  Game: Game_order_by
+  GameUser: GameUser_order_by
+  ban_id: order_by
+  banned: order_by
+  factionId: order_by
+  gameId: order_by
+  gameuserId: order_by
+}
+
+"""primary key columns input for table: Ban"""
+input Ban_pk_columns_input {
+  ban_id: Int!
+}
+
+"""
+select columns of table "Ban"
+"""
+enum Ban_select_column {
+  """column name"""
+  ban_id
+
+  """column name"""
+  banned
+
+  """column name"""
+  factionId
+
+  """column name"""
+  gameId
+
+  """column name"""
+  gameuserId
+}
+
+"""
+input type for updating data in table "Ban"
+"""
+input Ban_set_input {
+  ban_id: Int
+  banned: Boolean
+  factionId: Int
+  gameId: Int
+  gameuserId: Int
+}
+
+"""aggregate stddev on columns"""
+type Ban_stddev_fields {
+  ban_id: Float
+  factionId: Float
+  gameId: Float
+  gameuserId: Float
+}
+
+"""
+order by stddev() on columns of table "Ban"
+"""
+input Ban_stddev_order_by {
+  ban_id: order_by
+  factionId: order_by
+  gameId: order_by
+  gameuserId: order_by
+}
+
+"""aggregate stddev_pop on columns"""
+type Ban_stddev_pop_fields {
+  ban_id: Float
+  factionId: Float
+  gameId: Float
+  gameuserId: Float
+}
+
+"""
+order by stddev_pop() on columns of table "Ban"
+"""
+input Ban_stddev_pop_order_by {
+  ban_id: order_by
+  factionId: order_by
+  gameId: order_by
+  gameuserId: order_by
+}
+
+"""aggregate stddev_samp on columns"""
+type Ban_stddev_samp_fields {
+  ban_id: Float
+  factionId: Float
+  gameId: Float
+  gameuserId: Float
+}
+
+"""
+order by stddev_samp() on columns of table "Ban"
+"""
+input Ban_stddev_samp_order_by {
+  ban_id: order_by
+  factionId: order_by
+  gameId: order_by
+  gameuserId: order_by
+}
+
+"""aggregate sum on columns"""
+type Ban_sum_fields {
+  ban_id: Int
+  factionId: Int
+  gameId: Int
+  gameuserId: Int
+}
+
+"""
+order by sum() on columns of table "Ban"
+"""
+input Ban_sum_order_by {
+  ban_id: order_by
+  factionId: order_by
+  gameId: order_by
+  gameuserId: order_by
+}
+
+"""
+update columns of table "Ban"
+"""
+enum Ban_update_column {
+  """column name"""
+  ban_id
+
+  """column name"""
+  banned
+
+  """column name"""
+  factionId
+
+  """column name"""
+  gameId
+
+  """column name"""
+  gameuserId
+}
+
+"""aggregate var_pop on columns"""
+type Ban_var_pop_fields {
+  ban_id: Float
+  factionId: Float
+  gameId: Float
+  gameuserId: Float
+}
+
+"""
+order by var_pop() on columns of table "Ban"
+"""
+input Ban_var_pop_order_by {
+  ban_id: order_by
+  factionId: order_by
+  gameId: order_by
+  gameuserId: order_by
+}
+
+"""aggregate var_samp on columns"""
+type Ban_var_samp_fields {
+  ban_id: Float
+  factionId: Float
+  gameId: Float
+  gameuserId: Float
+}
+
+"""
+order by var_samp() on columns of table "Ban"
+"""
+input Ban_var_samp_order_by {
+  ban_id: order_by
+  factionId: order_by
+  gameId: order_by
+  gameuserId: order_by
+}
+
+"""aggregate variance on columns"""
+type Ban_variance_fields {
+  ban_id: Float
+  factionId: Float
+  gameId: Float
+  gameuserId: Float
+}
+
+"""
+order by variance() on columns of table "Ban"
+"""
+input Ban_variance_order_by {
+  ban_id: order_by
+  factionId: order_by
+  gameId: order_by
+  gameuserId: order_by
+}
+
+"""
+Boolean expression to compare columns of type "Boolean". All fields are combined with logical 'AND'.
+"""
+input Boolean_comparison_exp {
+  _eq: Boolean
+  _gt: Boolean
+  _gte: Boolean
+  _in: [Boolean!]
+  _is_null: Boolean
+  _lt: Boolean
+  _lte: Boolean
+  _neq: Boolean
+  _nin: [Boolean!]
+}
+
+"""
+columns and relationships of "Faction"
+"""
+type Faction {
+  """An array relationship"""
+  Bans(
+    """distinct select on columns"""
+    distinct_on: [Ban_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Ban_order_by!]
+
+    """filter the rows returned"""
+    where: Ban_bool_exp
+  ): [Ban!]!
+
+  """An aggregate relationship"""
+  Bans_aggregate(
+    """distinct select on columns"""
+    distinct_on: [Ban_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Ban_order_by!]
+
+    """filter the rows returned"""
+    where: Ban_bool_exp
+  ): Ban_aggregate!
+
+  """An array relationship"""
+  Picks(
+    """distinct select on columns"""
+    distinct_on: [Pick_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Pick_order_by!]
+
+    """filter the rows returned"""
+    where: Pick_bool_exp
+  ): [Pick!]!
+
+  """An aggregate relationship"""
+  Picks_aggregate(
+    """distinct select on columns"""
+    distinct_on: [Pick_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Pick_order_by!]
+
+    """filter the rows returned"""
+    where: Pick_bool_exp
+  ): Pick_aggregate!
+  faction_id: Int!
+  name: String!
+  url: String!
+}
+
+"""
+aggregated selection of "Faction"
+"""
+type Faction_aggregate {
+  aggregate: Faction_aggregate_fields
+  nodes: [Faction!]!
+}
+
+"""
+aggregate fields of "Faction"
+"""
+type Faction_aggregate_fields {
+  avg: Faction_avg_fields
+  count(columns: [Faction_select_column!], distinct: Boolean): Int!
+  max: Faction_max_fields
+  min: Faction_min_fields
+  stddev: Faction_stddev_fields
+  stddev_pop: Faction_stddev_pop_fields
+  stddev_samp: Faction_stddev_samp_fields
+  sum: Faction_sum_fields
+  var_pop: Faction_var_pop_fields
+  var_samp: Faction_var_samp_fields
+  variance: Faction_variance_fields
+}
+
+"""
+order by aggregate values of table "Faction"
+"""
+input Faction_aggregate_order_by {
+  avg: Faction_avg_order_by
+  count: order_by
+  max: Faction_max_order_by
+  min: Faction_min_order_by
+  stddev: Faction_stddev_order_by
+  stddev_pop: Faction_stddev_pop_order_by
+  stddev_samp: Faction_stddev_samp_order_by
+  sum: Faction_sum_order_by
+  var_pop: Faction_var_pop_order_by
+  var_samp: Faction_var_samp_order_by
+  variance: Faction_variance_order_by
+}
+
+"""
+input type for inserting array relation for remote table "Faction"
+"""
+input Faction_arr_rel_insert_input {
+  data: [Faction_insert_input!]!
+
+  """on conflict condition"""
+  on_conflict: Faction_on_conflict
+}
+
+"""aggregate avg on columns"""
+type Faction_avg_fields {
+  faction_id: Float
+}
+
+"""
+order by avg() on columns of table "Faction"
+"""
+input Faction_avg_order_by {
+  faction_id: order_by
+}
+
+"""
+Boolean expression to filter rows from the table "Faction". All fields are combined with a logical 'AND'.
+"""
+input Faction_bool_exp {
+  Bans: Ban_bool_exp
+  Picks: Pick_bool_exp
+  _and: [Faction_bool_exp!]
+  _not: Faction_bool_exp
+  _or: [Faction_bool_exp!]
+  faction_id: Int_comparison_exp
+  name: String_comparison_exp
+  url: String_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "Faction"
+"""
+enum Faction_constraint {
+  """unique or primary key constraint"""
+  Faction_id_key
+
+  """unique or primary key constraint"""
+  Faction_pkey1
+}
+
+"""
+input type for incrementing numeric columns in table "Faction"
+"""
+input Faction_inc_input {
+  faction_id: Int
+}
+
+"""
+input type for inserting data into table "Faction"
+"""
+input Faction_insert_input {
+  Bans: Ban_arr_rel_insert_input
+  Picks: Pick_arr_rel_insert_input
+  faction_id: Int
+  name: String
+  url: String
+}
+
+"""aggregate max on columns"""
+type Faction_max_fields {
+  faction_id: Int
+  name: String
+  url: String
+}
+
+"""
+order by max() on columns of table "Faction"
+"""
+input Faction_max_order_by {
+  faction_id: order_by
+  name: order_by
+  url: order_by
+}
+
+"""aggregate min on columns"""
+type Faction_min_fields {
+  faction_id: Int
+  name: String
+  url: String
+}
+
+"""
+order by min() on columns of table "Faction"
+"""
+input Faction_min_order_by {
+  faction_id: order_by
+  name: order_by
+  url: order_by
+}
+
+"""
+response of any mutation on the table "Faction"
+"""
+type Faction_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [Faction!]!
+}
+
+"""
+input type for inserting object relation for remote table "Faction"
+"""
+input Faction_obj_rel_insert_input {
+  data: Faction_insert_input!
+
+  """on conflict condition"""
+  on_conflict: Faction_on_conflict
+}
+
+"""
+on conflict condition type for table "Faction"
+"""
+input Faction_on_conflict {
+  constraint: Faction_constraint!
+  update_columns: [Faction_update_column!]! = []
+  where: Faction_bool_exp
+}
+
+"""Ordering options when selecting data from "Faction"."""
+input Faction_order_by {
+  Bans_aggregate: Ban_aggregate_order_by
+  Picks_aggregate: Pick_aggregate_order_by
+  faction_id: order_by
+  name: order_by
+  url: order_by
+}
+
+"""primary key columns input for table: Faction"""
+input Faction_pk_columns_input {
+  name: String!
+}
+
+"""
+select columns of table "Faction"
+"""
+enum Faction_select_column {
+  """column name"""
+  faction_id
+
+  """column name"""
+  name
+
+  """column name"""
+  url
+}
+
+"""
+input type for updating data in table "Faction"
+"""
+input Faction_set_input {
+  faction_id: Int
+  name: String
+  url: String
+}
+
+"""aggregate stddev on columns"""
+type Faction_stddev_fields {
+  faction_id: Float
+}
+
+"""
+order by stddev() on columns of table "Faction"
+"""
+input Faction_stddev_order_by {
+  faction_id: order_by
+}
+
+"""aggregate stddev_pop on columns"""
+type Faction_stddev_pop_fields {
+  faction_id: Float
+}
+
+"""
+order by stddev_pop() on columns of table "Faction"
+"""
+input Faction_stddev_pop_order_by {
+  faction_id: order_by
+}
+
+"""aggregate stddev_samp on columns"""
+type Faction_stddev_samp_fields {
+  faction_id: Float
+}
+
+"""
+order by stddev_samp() on columns of table "Faction"
+"""
+input Faction_stddev_samp_order_by {
+  faction_id: order_by
+}
+
+"""aggregate sum on columns"""
+type Faction_sum_fields {
+  faction_id: Int
+}
+
+"""
+order by sum() on columns of table "Faction"
+"""
+input Faction_sum_order_by {
+  faction_id: order_by
+}
+
+"""
+update columns of table "Faction"
+"""
+enum Faction_update_column {
+  """column name"""
+  faction_id
+
+  """column name"""
+  name
+
+  """column name"""
+  url
+}
+
+"""aggregate var_pop on columns"""
+type Faction_var_pop_fields {
+  faction_id: Float
+}
+
+"""
+order by var_pop() on columns of table "Faction"
+"""
+input Faction_var_pop_order_by {
+  faction_id: order_by
+}
+
+"""aggregate var_samp on columns"""
+type Faction_var_samp_fields {
+  faction_id: Float
+}
+
+"""
+order by var_samp() on columns of table "Faction"
+"""
+input Faction_var_samp_order_by {
+  faction_id: order_by
+}
+
+"""aggregate variance on columns"""
+type Faction_variance_fields {
+  faction_id: Float
+}
+
+"""
+order by variance() on columns of table "Faction"
+"""
+input Faction_variance_order_by {
+  faction_id: order_by
+}
+
+"""
+columns and relationships of "Game"
+"""
+type Game {
+  """An array relationship"""
+  Bans(
+    """distinct select on columns"""
+    distinct_on: [Ban_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Ban_order_by!]
+
+    """filter the rows returned"""
+    where: Ban_bool_exp
+  ): [Ban!]!
+
+  """An aggregate relationship"""
+  Bans_aggregate(
+    """distinct select on columns"""
+    distinct_on: [Ban_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Ban_order_by!]
+
+    """filter the rows returned"""
+    where: Ban_bool_exp
+  ): Ban_aggregate!
+
+  """An object relationship"""
+  GameUser: GameUser
+
+  """An array relationship"""
+  GameUsers(
+    """distinct select on columns"""
+    distinct_on: [GameUser_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [GameUser_order_by!]
+
+    """filter the rows returned"""
+    where: GameUser_bool_exp
+  ): [GameUser!]!
+
+  """An aggregate relationship"""
+  GameUsers_aggregate(
+    """distinct select on columns"""
+    distinct_on: [GameUser_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [GameUser_order_by!]
+
+    """filter the rows returned"""
+    where: GameUser_bool_exp
+  ): GameUser_aggregate!
+
+  """An array relationship"""
+  Picks(
+    """distinct select on columns"""
+    distinct_on: [Pick_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Pick_order_by!]
+
+    """filter the rows returned"""
+    where: Pick_bool_exp
+  ): [Pick!]!
+
+  """An aggregate relationship"""
+  Picks_aggregate(
+    """distinct select on columns"""
+    distinct_on: [Pick_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Pick_order_by!]
+
+    """filter the rows returned"""
+    where: Pick_bool_exp
+  ): Pick_aggregate!
+  availableSeats: String
+  bansDone: Boolean
+  bansLower: Int
+  bansUpper: Int
+  draftStarted: Boolean
+  gameAdmin: Int
+  gameCreated: date
+
+  """An object relationship"""
+  gameUserByGameadmin: GameUser
+  game_id: Int!
+  groupId: Int
+  hsLabels: String
+  mapString: String
+  name: String
+  picksDone: Boolean
+  userPicking: Int
+}
+
+"""
+columns and relationships of "GameUser"
+"""
+type GameUser {
+  """An array relationship"""
+  Bans(
+    """distinct select on columns"""
+    distinct_on: [Ban_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Ban_order_by!]
+
+    """filter the rows returned"""
+    where: Ban_bool_exp
+  ): [Ban!]!
+
+  """An aggregate relationship"""
+  Bans_aggregate(
+    """distinct select on columns"""
+    distinct_on: [Ban_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Ban_order_by!]
+
+    """filter the rows returned"""
+    where: Ban_bool_exp
+  ): Ban_aggregate!
+
+  """An object relationship"""
+  Game: Game
+
+  """An array relationship"""
+  Games(
+    """distinct select on columns"""
+    distinct_on: [Game_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Game_order_by!]
+
+    """filter the rows returned"""
+    where: Game_bool_exp
+  ): [Game!]!
+
+  """An aggregate relationship"""
+  Games_aggregate(
+    """distinct select on columns"""
+    distinct_on: [Game_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Game_order_by!]
+
+    """filter the rows returned"""
+    where: Game_bool_exp
+  ): Game_aggregate!
+
+  """An object relationship"""
+  Pick: Pick
+
+  """An array relationship"""
+  Picks(
+    """distinct select on columns"""
+    distinct_on: [Pick_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Pick_order_by!]
+
+    """filter the rows returned"""
+    where: Pick_bool_exp
+  ): [Pick!]!
+
+  """An aggregate relationship"""
+  Picks_aggregate(
+    """distinct select on columns"""
+    distinct_on: [Pick_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Pick_order_by!]
+
+    """filter the rows returned"""
+    where: Pick_bool_exp
+  ): Pick_aggregate!
+
+  """An object relationship"""
+  User: User!
+  banningDone: Boolean!
+  gameId: Int
+
+  """An array relationship"""
+  gamesByGameadmin(
+    """distinct select on columns"""
+    distinct_on: [Game_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Game_order_by!]
+
+    """filter the rows returned"""
+    where: Game_bool_exp
+  ): [Game!]!
+
+  """An aggregate relationship"""
+  gamesByGameadmin_aggregate(
+    """distinct select on columns"""
+    distinct_on: [Game_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Game_order_by!]
+
+    """filter the rows returned"""
+    where: Game_bool_exp
+  ): Game_aggregate!
+  gameuser_id: Int!
+  pickId: Int
+  pickOrder: Int
+  seatNumber: Int
+  userId: Int!
+}
+
+"""
+aggregated selection of "GameUser"
+"""
+type GameUser_aggregate {
+  aggregate: GameUser_aggregate_fields
+  nodes: [GameUser!]!
+}
+
+"""
+aggregate fields of "GameUser"
+"""
+type GameUser_aggregate_fields {
+  avg: GameUser_avg_fields
+  count(columns: [GameUser_select_column!], distinct: Boolean): Int!
+  max: GameUser_max_fields
+  min: GameUser_min_fields
+  stddev: GameUser_stddev_fields
+  stddev_pop: GameUser_stddev_pop_fields
+  stddev_samp: GameUser_stddev_samp_fields
+  sum: GameUser_sum_fields
+  var_pop: GameUser_var_pop_fields
+  var_samp: GameUser_var_samp_fields
+  variance: GameUser_variance_fields
+}
+
+"""
+order by aggregate values of table "GameUser"
+"""
+input GameUser_aggregate_order_by {
+  avg: GameUser_avg_order_by
+  count: order_by
+  max: GameUser_max_order_by
+  min: GameUser_min_order_by
+  stddev: GameUser_stddev_order_by
+  stddev_pop: GameUser_stddev_pop_order_by
+  stddev_samp: GameUser_stddev_samp_order_by
+  sum: GameUser_sum_order_by
+  var_pop: GameUser_var_pop_order_by
+  var_samp: GameUser_var_samp_order_by
+  variance: GameUser_variance_order_by
+}
+
+"""
+input type for inserting array relation for remote table "GameUser"
+"""
+input GameUser_arr_rel_insert_input {
+  data: [GameUser_insert_input!]!
+
+  """on conflict condition"""
+  on_conflict: GameUser_on_conflict
+}
+
+"""aggregate avg on columns"""
+type GameUser_avg_fields {
+  gameId: Float
+  gameuser_id: Float
+  pickId: Float
+  pickOrder: Float
+  seatNumber: Float
+  userId: Float
+}
+
+"""
+order by avg() on columns of table "GameUser"
+"""
+input GameUser_avg_order_by {
+  gameId: order_by
+  gameuser_id: order_by
+  pickId: order_by
+  pickOrder: order_by
+  seatNumber: order_by
+  userId: order_by
+}
+
+"""
+Boolean expression to filter rows from the table "GameUser". All fields are combined with a logical 'AND'.
+"""
+input GameUser_bool_exp {
+  Bans: Ban_bool_exp
+  Game: Game_bool_exp
+  Games: Game_bool_exp
+  Pick: Pick_bool_exp
+  Picks: Pick_bool_exp
+  User: User_bool_exp
+  _and: [GameUser_bool_exp!]
+  _not: GameUser_bool_exp
+  _or: [GameUser_bool_exp!]
+  banningDone: Boolean_comparison_exp
+  gameId: Int_comparison_exp
+  gamesByGameadmin: Game_bool_exp
+  gameuser_id: Int_comparison_exp
+  pickId: Int_comparison_exp
+  pickOrder: Int_comparison_exp
+  seatNumber: Int_comparison_exp
+  userId: Int_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "GameUser"
+"""
+enum GameUser_constraint {
+  """unique or primary key constraint"""
+  GameUser_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "GameUser"
+"""
+input GameUser_inc_input {
+  gameId: Int
+  gameuser_id: Int
+  pickId: Int
+  pickOrder: Int
+  seatNumber: Int
+  userId: Int
+}
+
+"""
+input type for inserting data into table "GameUser"
+"""
+input GameUser_insert_input {
+  Bans: Ban_arr_rel_insert_input
+  Game: Game_obj_rel_insert_input
+  Games: Game_arr_rel_insert_input
+  Pick: Pick_obj_rel_insert_input
+  Picks: Pick_arr_rel_insert_input
+  User: User_obj_rel_insert_input
+  banningDone: Boolean
+  gameId: Int
+  gamesByGameadmin: Game_arr_rel_insert_input
+  gameuser_id: Int
+  pickId: Int
+  pickOrder: Int
+  seatNumber: Int
+  userId: Int
+}
+
+"""aggregate max on columns"""
+type GameUser_max_fields {
+  gameId: Int
+  gameuser_id: Int
+  pickId: Int
+  pickOrder: Int
+  seatNumber: Int
+  userId: Int
+}
+
+"""
+order by max() on columns of table "GameUser"
+"""
+input GameUser_max_order_by {
+  gameId: order_by
+  gameuser_id: order_by
+  pickId: order_by
+  pickOrder: order_by
+  seatNumber: order_by
+  userId: order_by
+}
+
+"""aggregate min on columns"""
+type GameUser_min_fields {
+  gameId: Int
+  gameuser_id: Int
+  pickId: Int
+  pickOrder: Int
+  seatNumber: Int
+  userId: Int
+}
+
+"""
+order by min() on columns of table "GameUser"
+"""
+input GameUser_min_order_by {
+  gameId: order_by
+  gameuser_id: order_by
+  pickId: order_by
+  pickOrder: order_by
+  seatNumber: order_by
+  userId: order_by
+}
+
+"""
+response of any mutation on the table "GameUser"
+"""
+type GameUser_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [GameUser!]!
+}
+
+"""
+input type for inserting object relation for remote table "GameUser"
+"""
+input GameUser_obj_rel_insert_input {
+  data: GameUser_insert_input!
+
+  """on conflict condition"""
+  on_conflict: GameUser_on_conflict
+}
+
+"""
+on conflict condition type for table "GameUser"
+"""
+input GameUser_on_conflict {
+  constraint: GameUser_constraint!
+  update_columns: [GameUser_update_column!]! = []
+  where: GameUser_bool_exp
+}
+
+"""Ordering options when selecting data from "GameUser"."""
+input GameUser_order_by {
+  Bans_aggregate: Ban_aggregate_order_by
+  Game: Game_order_by
+  Games_aggregate: Game_aggregate_order_by
+  Pick: Pick_order_by
+  Picks_aggregate: Pick_aggregate_order_by
+  User: User_order_by
+  banningDone: order_by
+  gameId: order_by
+  gamesByGameadmin_aggregate: Game_aggregate_order_by
+  gameuser_id: order_by
+  pickId: order_by
+  pickOrder: order_by
+  seatNumber: order_by
+  userId: order_by
+}
+
+"""primary key columns input for table: GameUser"""
+input GameUser_pk_columns_input {
+  gameuser_id: Int!
+}
+
+"""
+select columns of table "GameUser"
+"""
+enum GameUser_select_column {
+  """column name"""
+  banningDone
+
+  """column name"""
+  gameId
+
+  """column name"""
+  gameuser_id
+
+  """column name"""
+  pickId
+
+  """column name"""
+  pickOrder
+
+  """column name"""
+  seatNumber
+
+  """column name"""
+  userId
+}
+
+"""
+input type for updating data in table "GameUser"
+"""
+input GameUser_set_input {
+  banningDone: Boolean
+  gameId: Int
+  gameuser_id: Int
+  pickId: Int
+  pickOrder: Int
+  seatNumber: Int
+  userId: Int
+}
+
+"""aggregate stddev on columns"""
+type GameUser_stddev_fields {
+  gameId: Float
+  gameuser_id: Float
+  pickId: Float
+  pickOrder: Float
+  seatNumber: Float
+  userId: Float
+}
+
+"""
+order by stddev() on columns of table "GameUser"
+"""
+input GameUser_stddev_order_by {
+  gameId: order_by
+  gameuser_id: order_by
+  pickId: order_by
+  pickOrder: order_by
+  seatNumber: order_by
+  userId: order_by
+}
+
+"""aggregate stddev_pop on columns"""
+type GameUser_stddev_pop_fields {
+  gameId: Float
+  gameuser_id: Float
+  pickId: Float
+  pickOrder: Float
+  seatNumber: Float
+  userId: Float
+}
+
+"""
+order by stddev_pop() on columns of table "GameUser"
+"""
+input GameUser_stddev_pop_order_by {
+  gameId: order_by
+  gameuser_id: order_by
+  pickId: order_by
+  pickOrder: order_by
+  seatNumber: order_by
+  userId: order_by
+}
+
+"""aggregate stddev_samp on columns"""
+type GameUser_stddev_samp_fields {
+  gameId: Float
+  gameuser_id: Float
+  pickId: Float
+  pickOrder: Float
+  seatNumber: Float
+  userId: Float
+}
+
+"""
+order by stddev_samp() on columns of table "GameUser"
+"""
+input GameUser_stddev_samp_order_by {
+  gameId: order_by
+  gameuser_id: order_by
+  pickId: order_by
+  pickOrder: order_by
+  seatNumber: order_by
+  userId: order_by
+}
+
+"""aggregate sum on columns"""
+type GameUser_sum_fields {
+  gameId: Int
+  gameuser_id: Int
+  pickId: Int
+  pickOrder: Int
+  seatNumber: Int
+  userId: Int
+}
+
+"""
+order by sum() on columns of table "GameUser"
+"""
+input GameUser_sum_order_by {
+  gameId: order_by
+  gameuser_id: order_by
+  pickId: order_by
+  pickOrder: order_by
+  seatNumber: order_by
+  userId: order_by
+}
+
+"""
+update columns of table "GameUser"
+"""
+enum GameUser_update_column {
+  """column name"""
+  banningDone
+
+  """column name"""
+  gameId
+
+  """column name"""
+  gameuser_id
+
+  """column name"""
+  pickId
+
+  """column name"""
+  pickOrder
+
+  """column name"""
+  seatNumber
+
+  """column name"""
+  userId
+}
+
+"""aggregate var_pop on columns"""
+type GameUser_var_pop_fields {
+  gameId: Float
+  gameuser_id: Float
+  pickId: Float
+  pickOrder: Float
+  seatNumber: Float
+  userId: Float
+}
+
+"""
+order by var_pop() on columns of table "GameUser"
+"""
+input GameUser_var_pop_order_by {
+  gameId: order_by
+  gameuser_id: order_by
+  pickId: order_by
+  pickOrder: order_by
+  seatNumber: order_by
+  userId: order_by
+}
+
+"""aggregate var_samp on columns"""
+type GameUser_var_samp_fields {
+  gameId: Float
+  gameuser_id: Float
+  pickId: Float
+  pickOrder: Float
+  seatNumber: Float
+  userId: Float
+}
+
+"""
+order by var_samp() on columns of table "GameUser"
+"""
+input GameUser_var_samp_order_by {
+  gameId: order_by
+  gameuser_id: order_by
+  pickId: order_by
+  pickOrder: order_by
+  seatNumber: order_by
+  userId: order_by
+}
+
+"""aggregate variance on columns"""
+type GameUser_variance_fields {
+  gameId: Float
+  gameuser_id: Float
+  pickId: Float
+  pickOrder: Float
+  seatNumber: Float
+  userId: Float
+}
+
+"""
+order by variance() on columns of table "GameUser"
+"""
+input GameUser_variance_order_by {
+  gameId: order_by
+  gameuser_id: order_by
+  pickId: order_by
+  pickOrder: order_by
+  seatNumber: order_by
+  userId: order_by
+}
+
+"""
+aggregated selection of "Game"
+"""
+type Game_aggregate {
+  aggregate: Game_aggregate_fields
+  nodes: [Game!]!
+}
+
+"""
+aggregate fields of "Game"
+"""
+type Game_aggregate_fields {
+  avg: Game_avg_fields
+  count(columns: [Game_select_column!], distinct: Boolean): Int!
+  max: Game_max_fields
+  min: Game_min_fields
+  stddev: Game_stddev_fields
+  stddev_pop: Game_stddev_pop_fields
+  stddev_samp: Game_stddev_samp_fields
+  sum: Game_sum_fields
+  var_pop: Game_var_pop_fields
+  var_samp: Game_var_samp_fields
+  variance: Game_variance_fields
+}
+
+"""
+order by aggregate values of table "Game"
+"""
+input Game_aggregate_order_by {
+  avg: Game_avg_order_by
+  count: order_by
+  max: Game_max_order_by
+  min: Game_min_order_by
+  stddev: Game_stddev_order_by
+  stddev_pop: Game_stddev_pop_order_by
+  stddev_samp: Game_stddev_samp_order_by
+  sum: Game_sum_order_by
+  var_pop: Game_var_pop_order_by
+  var_samp: Game_var_samp_order_by
+  variance: Game_variance_order_by
+}
+
+"""
+input type for inserting array relation for remote table "Game"
+"""
+input Game_arr_rel_insert_input {
+  data: [Game_insert_input!]!
+
+  """on conflict condition"""
+  on_conflict: Game_on_conflict
+}
+
+"""aggregate avg on columns"""
+type Game_avg_fields {
+  bansLower: Float
+  bansUpper: Float
+  gameAdmin: Float
+  game_id: Float
+  groupId: Float
+  userPicking: Float
+}
+
+"""
+order by avg() on columns of table "Game"
+"""
+input Game_avg_order_by {
+  bansLower: order_by
+  bansUpper: order_by
+  gameAdmin: order_by
+  game_id: order_by
+  groupId: order_by
+  userPicking: order_by
+}
+
+"""
+Boolean expression to filter rows from the table "Game". All fields are combined with a logical 'AND'.
+"""
+input Game_bool_exp {
+  Bans: Ban_bool_exp
+  GameUser: GameUser_bool_exp
+  GameUsers: GameUser_bool_exp
+  Picks: Pick_bool_exp
+  _and: [Game_bool_exp!]
+  _not: Game_bool_exp
+  _or: [Game_bool_exp!]
+  availableSeats: String_comparison_exp
+  bansDone: Boolean_comparison_exp
+  bansLower: Int_comparison_exp
+  bansUpper: Int_comparison_exp
+  draftStarted: Boolean_comparison_exp
+  gameAdmin: Int_comparison_exp
+  gameCreated: date_comparison_exp
+  gameUserByGameadmin: GameUser_bool_exp
+  game_id: Int_comparison_exp
+  groupId: Int_comparison_exp
+  hsLabels: String_comparison_exp
+  mapString: String_comparison_exp
+  name: String_comparison_exp
+  picksDone: Boolean_comparison_exp
+  userPicking: Int_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "Game"
+"""
+enum Game_constraint {
+  """unique or primary key constraint"""
+  Game_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "Game"
+"""
+input Game_inc_input {
+  bansLower: Int
+  bansUpper: Int
+  gameAdmin: Int
+  game_id: Int
+  groupId: Int
+  userPicking: Int
+}
+
+"""
+input type for inserting data into table "Game"
+"""
+input Game_insert_input {
+  Bans: Ban_arr_rel_insert_input
+  GameUser: GameUser_obj_rel_insert_input
+  GameUsers: GameUser_arr_rel_insert_input
+  Picks: Pick_arr_rel_insert_input
+  availableSeats: String
+  bansDone: Boolean
+  bansLower: Int
+  bansUpper: Int
+  draftStarted: Boolean
+  gameAdmin: Int
+  gameCreated: date
+  gameUserByGameadmin: GameUser_obj_rel_insert_input
+  game_id: Int
+  groupId: Int
+  hsLabels: String
+  mapString: String
+  name: String
+  picksDone: Boolean
+  userPicking: Int
+}
+
+"""aggregate max on columns"""
+type Game_max_fields {
+  availableSeats: String
+  bansLower: Int
+  bansUpper: Int
+  gameAdmin: Int
+  gameCreated: date
+  game_id: Int
+  groupId: Int
+  hsLabels: String
+  mapString: String
+  name: String
+  userPicking: Int
+}
+
+"""
+order by max() on columns of table "Game"
+"""
+input Game_max_order_by {
+  availableSeats: order_by
+  bansLower: order_by
+  bansUpper: order_by
+  gameAdmin: order_by
+  gameCreated: order_by
+  game_id: order_by
+  groupId: order_by
+  hsLabels: order_by
+  mapString: order_by
+  name: order_by
+  userPicking: order_by
+}
+
+"""aggregate min on columns"""
+type Game_min_fields {
+  availableSeats: String
+  bansLower: Int
+  bansUpper: Int
+  gameAdmin: Int
+  gameCreated: date
+  game_id: Int
+  groupId: Int
+  hsLabels: String
+  mapString: String
+  name: String
+  userPicking: Int
+}
+
+"""
+order by min() on columns of table "Game"
+"""
+input Game_min_order_by {
+  availableSeats: order_by
+  bansLower: order_by
+  bansUpper: order_by
+  gameAdmin: order_by
+  gameCreated: order_by
+  game_id: order_by
+  groupId: order_by
+  hsLabels: order_by
+  mapString: order_by
+  name: order_by
+  userPicking: order_by
+}
+
+"""
+response of any mutation on the table "Game"
+"""
+type Game_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [Game!]!
+}
+
+"""
+input type for inserting object relation for remote table "Game"
+"""
+input Game_obj_rel_insert_input {
+  data: Game_insert_input!
+
+  """on conflict condition"""
+  on_conflict: Game_on_conflict
+}
+
+"""
+on conflict condition type for table "Game"
+"""
+input Game_on_conflict {
+  constraint: Game_constraint!
+  update_columns: [Game_update_column!]! = []
+  where: Game_bool_exp
+}
+
+"""Ordering options when selecting data from "Game"."""
+input Game_order_by {
+  Bans_aggregate: Ban_aggregate_order_by
+  GameUser: GameUser_order_by
+  GameUsers_aggregate: GameUser_aggregate_order_by
+  Picks_aggregate: Pick_aggregate_order_by
+  availableSeats: order_by
+  bansDone: order_by
+  bansLower: order_by
+  bansUpper: order_by
+  draftStarted: order_by
+  gameAdmin: order_by
+  gameCreated: order_by
+  gameUserByGameadmin: GameUser_order_by
+  game_id: order_by
+  groupId: order_by
+  hsLabels: order_by
+  mapString: order_by
+  name: order_by
+  picksDone: order_by
+  userPicking: order_by
+}
+
+"""primary key columns input for table: Game"""
+input Game_pk_columns_input {
+  game_id: Int!
+}
+
+"""
+select columns of table "Game"
+"""
+enum Game_select_column {
+  """column name"""
+  availableSeats
+
+  """column name"""
+  bansDone
+
+  """column name"""
+  bansLower
+
+  """column name"""
+  bansUpper
+
+  """column name"""
+  draftStarted
+
+  """column name"""
+  gameAdmin
+
+  """column name"""
+  gameCreated
+
+  """column name"""
+  game_id
+
+  """column name"""
+  groupId
+
+  """column name"""
+  hsLabels
+
+  """column name"""
+  mapString
+
+  """column name"""
+  name
+
+  """column name"""
+  picksDone
+
+  """column name"""
+  userPicking
+}
+
+"""
+input type for updating data in table "Game"
+"""
+input Game_set_input {
+  availableSeats: String
+  bansDone: Boolean
+  bansLower: Int
+  bansUpper: Int
+  draftStarted: Boolean
+  gameAdmin: Int
+  gameCreated: date
+  game_id: Int
+  groupId: Int
+  hsLabels: String
+  mapString: String
+  name: String
+  picksDone: Boolean
+  userPicking: Int
+}
+
+"""aggregate stddev on columns"""
+type Game_stddev_fields {
+  bansLower: Float
+  bansUpper: Float
+  gameAdmin: Float
+  game_id: Float
+  groupId: Float
+  userPicking: Float
+}
+
+"""
+order by stddev() on columns of table "Game"
+"""
+input Game_stddev_order_by {
+  bansLower: order_by
+  bansUpper: order_by
+  gameAdmin: order_by
+  game_id: order_by
+  groupId: order_by
+  userPicking: order_by
+}
+
+"""aggregate stddev_pop on columns"""
+type Game_stddev_pop_fields {
+  bansLower: Float
+  bansUpper: Float
+  gameAdmin: Float
+  game_id: Float
+  groupId: Float
+  userPicking: Float
+}
+
+"""
+order by stddev_pop() on columns of table "Game"
+"""
+input Game_stddev_pop_order_by {
+  bansLower: order_by
+  bansUpper: order_by
+  gameAdmin: order_by
+  game_id: order_by
+  groupId: order_by
+  userPicking: order_by
+}
+
+"""aggregate stddev_samp on columns"""
+type Game_stddev_samp_fields {
+  bansLower: Float
+  bansUpper: Float
+  gameAdmin: Float
+  game_id: Float
+  groupId: Float
+  userPicking: Float
+}
+
+"""
+order by stddev_samp() on columns of table "Game"
+"""
+input Game_stddev_samp_order_by {
+  bansLower: order_by
+  bansUpper: order_by
+  gameAdmin: order_by
+  game_id: order_by
+  groupId: order_by
+  userPicking: order_by
+}
+
+"""aggregate sum on columns"""
+type Game_sum_fields {
+  bansLower: Int
+  bansUpper: Int
+  gameAdmin: Int
+  game_id: Int
+  groupId: Int
+  userPicking: Int
+}
+
+"""
+order by sum() on columns of table "Game"
+"""
+input Game_sum_order_by {
+  bansLower: order_by
+  bansUpper: order_by
+  gameAdmin: order_by
+  game_id: order_by
+  groupId: order_by
+  userPicking: order_by
+}
+
+"""
+update columns of table "Game"
+"""
+enum Game_update_column {
+  """column name"""
+  availableSeats
+
+  """column name"""
+  bansDone
+
+  """column name"""
+  bansLower
+
+  """column name"""
+  bansUpper
+
+  """column name"""
+  draftStarted
+
+  """column name"""
+  gameAdmin
+
+  """column name"""
+  gameCreated
+
+  """column name"""
+  game_id
+
+  """column name"""
+  groupId
+
+  """column name"""
+  hsLabels
+
+  """column name"""
+  mapString
+
+  """column name"""
+  name
+
+  """column name"""
+  picksDone
+
+  """column name"""
+  userPicking
+}
+
+"""aggregate var_pop on columns"""
+type Game_var_pop_fields {
+  bansLower: Float
+  bansUpper: Float
+  gameAdmin: Float
+  game_id: Float
+  groupId: Float
+  userPicking: Float
+}
+
+"""
+order by var_pop() on columns of table "Game"
+"""
+input Game_var_pop_order_by {
+  bansLower: order_by
+  bansUpper: order_by
+  gameAdmin: order_by
+  game_id: order_by
+  groupId: order_by
+  userPicking: order_by
+}
+
+"""aggregate var_samp on columns"""
+type Game_var_samp_fields {
+  bansLower: Float
+  bansUpper: Float
+  gameAdmin: Float
+  game_id: Float
+  groupId: Float
+  userPicking: Float
+}
+
+"""
+order by var_samp() on columns of table "Game"
+"""
+input Game_var_samp_order_by {
+  bansLower: order_by
+  bansUpper: order_by
+  gameAdmin: order_by
+  game_id: order_by
+  groupId: order_by
+  userPicking: order_by
+}
+
+"""aggregate variance on columns"""
+type Game_variance_fields {
+  bansLower: Float
+  bansUpper: Float
+  gameAdmin: Float
+  game_id: Float
+  groupId: Float
+  userPicking: Float
+}
+
+"""
+order by variance() on columns of table "Game"
+"""
+input Game_variance_order_by {
+  bansLower: order_by
+  bansUpper: order_by
+  gameAdmin: order_by
+  game_id: order_by
+  groupId: order_by
+  userPicking: order_by
+}
+
+"""
+columns and relationships of "Group"
+"""
+type Group {
+  """An array relationship"""
+  Games(
+    """distinct select on columns"""
+    distinct_on: [Game_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Game_order_by!]
+
+    """filter the rows returned"""
+    where: Game_bool_exp
+  ): [Game!]!
+
+  """An aggregate relationship"""
+  Games_aggregate(
+    """distinct select on columns"""
+    distinct_on: [Game_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Game_order_by!]
+
+    """filter the rows returned"""
+    where: Game_bool_exp
+  ): Game_aggregate!
+  GroupName: String!
+
+  """An array relationship"""
+  Users(
+    """distinct select on columns"""
+    distinct_on: [User_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [User_order_by!]
+
+    """filter the rows returned"""
+    where: User_bool_exp
+  ): [User!]!
+
+  """An aggregate relationship"""
+  Users_aggregate(
+    """distinct select on columns"""
+    distinct_on: [User_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [User_order_by!]
+
+    """filter the rows returned"""
+    where: User_bool_exp
+  ): User_aggregate!
+  groupPassword: String
+  group_id: Int!
+}
+
+type GroupOutput {
+  GroupName: String!
+  group_id: Int
+}
+
+"""
+aggregated selection of "Group"
+"""
+type Group_aggregate {
+  aggregate: Group_aggregate_fields
+  nodes: [Group!]!
+}
+
+"""
+aggregate fields of "Group"
+"""
+type Group_aggregate_fields {
+  avg: Group_avg_fields
+  count(columns: [Group_select_column!], distinct: Boolean): Int!
+  max: Group_max_fields
+  min: Group_min_fields
+  stddev: Group_stddev_fields
+  stddev_pop: Group_stddev_pop_fields
+  stddev_samp: Group_stddev_samp_fields
+  sum: Group_sum_fields
+  var_pop: Group_var_pop_fields
+  var_samp: Group_var_samp_fields
+  variance: Group_variance_fields
+}
+
+"""aggregate avg on columns"""
+type Group_avg_fields {
+  group_id: Float
+}
+
+"""
+Boolean expression to filter rows from the table "Group". All fields are combined with a logical 'AND'.
+"""
+input Group_bool_exp {
+  Games: Game_bool_exp
+  GroupName: String_comparison_exp
+  Users: User_bool_exp
+  _and: [Group_bool_exp!]
+  _not: Group_bool_exp
+  _or: [Group_bool_exp!]
+  groupPassword: String_comparison_exp
+  group_id: Int_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "Group"
+"""
+enum Group_constraint {
+  """unique or primary key constraint"""
+  Group_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "Group"
+"""
+input Group_inc_input {
+  group_id: Int
+}
+
+"""
+input type for inserting data into table "Group"
+"""
+input Group_insert_input {
+  Games: Game_arr_rel_insert_input
+  GroupName: String
+  Users: User_arr_rel_insert_input
+  groupPassword: String
+  group_id: Int
+}
+
+"""aggregate max on columns"""
+type Group_max_fields {
+  GroupName: String
+  groupPassword: String
+  group_id: Int
+}
+
+"""aggregate min on columns"""
+type Group_min_fields {
+  GroupName: String
+  groupPassword: String
+  group_id: Int
+}
+
+"""
+response of any mutation on the table "Group"
+"""
+type Group_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [Group!]!
+}
+
+"""
+input type for inserting object relation for remote table "Group"
+"""
+input Group_obj_rel_insert_input {
+  data: Group_insert_input!
+
+  """on conflict condition"""
+  on_conflict: Group_on_conflict
+}
+
+"""
+on conflict condition type for table "Group"
+"""
+input Group_on_conflict {
+  constraint: Group_constraint!
+  update_columns: [Group_update_column!]! = []
+  where: Group_bool_exp
+}
+
+"""Ordering options when selecting data from "Group"."""
+input Group_order_by {
+  Games_aggregate: Game_aggregate_order_by
+  GroupName: order_by
+  Users_aggregate: User_aggregate_order_by
+  groupPassword: order_by
+  group_id: order_by
+}
+
+"""primary key columns input for table: Group"""
+input Group_pk_columns_input {
+  group_id: Int!
+}
+
+"""
+select columns of table "Group"
+"""
+enum Group_select_column {
+  """column name"""
+  GroupName
+
+  """column name"""
+  groupPassword
+
+  """column name"""
+  group_id
+}
+
+"""
+input type for updating data in table "Group"
+"""
+input Group_set_input {
+  GroupName: String
+  groupPassword: String
+  group_id: Int
+}
+
+"""aggregate stddev on columns"""
+type Group_stddev_fields {
+  group_id: Float
+}
+
+"""aggregate stddev_pop on columns"""
+type Group_stddev_pop_fields {
+  group_id: Float
+}
+
+"""aggregate stddev_samp on columns"""
+type Group_stddev_samp_fields {
+  group_id: Float
+}
+
+"""aggregate sum on columns"""
+type Group_sum_fields {
+  group_id: Int
+}
+
+"""
+update columns of table "Group"
+"""
+enum Group_update_column {
+  """column name"""
+  GroupName
+
+  """column name"""
+  groupPassword
+
+  """column name"""
+  group_id
+}
+
+"""aggregate var_pop on columns"""
+type Group_var_pop_fields {
+  group_id: Float
+}
+
+"""aggregate var_samp on columns"""
+type Group_var_samp_fields {
+  group_id: Float
+}
+
+"""aggregate variance on columns"""
+type Group_variance_fields {
+  group_id: Float
+}
+
+"""
+Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'.
+"""
+input Int_comparison_exp {
+  _eq: Int
+  _gt: Int
+  _gte: Int
+  _in: [Int!]
+  _is_null: Boolean
+  _lt: Int
+  _lte: Int
+  _neq: Int
+  _nin: [Int!]
+}
+
+"""
+columns and relationships of "Pick"
+"""
+type Pick {
+  """An object relationship"""
+  Faction: Faction!
+
+  """An object relationship"""
+  Game: Game!
+
+  """An object relationship"""
+  GameUser: GameUser
+
+  """An array relationship"""
+  GameUsers(
+    """distinct select on columns"""
+    distinct_on: [GameUser_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [GameUser_order_by!]
+
+    """filter the rows returned"""
+    where: GameUser_bool_exp
+  ): [GameUser!]!
+
+  """An aggregate relationship"""
+  GameUsers_aggregate(
+    """distinct select on columns"""
+    distinct_on: [GameUser_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [GameUser_order_by!]
+
+    """filter the rows returned"""
+    where: GameUser_bool_exp
+  ): GameUser_aggregate!
+  factionId: Int!
+  gameId: Int!
+  gameuserId: Int
+  pick_id: Int!
+  picked: Boolean!
+}
+
+"""
+aggregated selection of "Pick"
+"""
+type Pick_aggregate {
+  aggregate: Pick_aggregate_fields
+  nodes: [Pick!]!
+}
+
+"""
+aggregate fields of "Pick"
+"""
+type Pick_aggregate_fields {
+  avg: Pick_avg_fields
+  count(columns: [Pick_select_column!], distinct: Boolean): Int!
+  max: Pick_max_fields
+  min: Pick_min_fields
+  stddev: Pick_stddev_fields
+  stddev_pop: Pick_stddev_pop_fields
+  stddev_samp: Pick_stddev_samp_fields
+  sum: Pick_sum_fields
+  var_pop: Pick_var_pop_fields
+  var_samp: Pick_var_samp_fields
+  variance: Pick_variance_fields
+}
+
+"""
+order by aggregate values of table "Pick"
+"""
+input Pick_aggregate_order_by {
+  avg: Pick_avg_order_by
+  count: order_by
+  max: Pick_max_order_by
+  min: Pick_min_order_by
+  stddev: Pick_stddev_order_by
+  stddev_pop: Pick_stddev_pop_order_by
+  stddev_samp: Pick_stddev_samp_order_by
+  sum: Pick_sum_order_by
+  var_pop: Pick_var_pop_order_by
+  var_samp: Pick_var_samp_order_by
+  variance: Pick_variance_order_by
+}
+
+"""
+input type for inserting array relation for remote table "Pick"
+"""
+input Pick_arr_rel_insert_input {
+  data: [Pick_insert_input!]!
+
+  """on conflict condition"""
+  on_conflict: Pick_on_conflict
+}
+
+"""aggregate avg on columns"""
+type Pick_avg_fields {
+  factionId: Float
+  gameId: Float
+  gameuserId: Float
+  pick_id: Float
+}
+
+"""
+order by avg() on columns of table "Pick"
+"""
+input Pick_avg_order_by {
+  factionId: order_by
+  gameId: order_by
+  gameuserId: order_by
+  pick_id: order_by
+}
+
+"""
+Boolean expression to filter rows from the table "Pick". All fields are combined with a logical 'AND'.
+"""
+input Pick_bool_exp {
+  Faction: Faction_bool_exp
+  Game: Game_bool_exp
+  GameUser: GameUser_bool_exp
+  GameUsers: GameUser_bool_exp
+  _and: [Pick_bool_exp!]
+  _not: Pick_bool_exp
+  _or: [Pick_bool_exp!]
+  factionId: Int_comparison_exp
+  gameId: Int_comparison_exp
+  gameuserId: Int_comparison_exp
+  pick_id: Int_comparison_exp
+  picked: Boolean_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "Pick"
+"""
+enum Pick_constraint {
+  """unique or primary key constraint"""
+  Pick_pkey
+
+  """unique or primary key constraint"""
+  Pick_userId_unique
+}
+
+"""
+input type for incrementing numeric columns in table "Pick"
+"""
+input Pick_inc_input {
+  factionId: Int
+  gameId: Int
+  gameuserId: Int
+  pick_id: Int
+}
+
+"""
+input type for inserting data into table "Pick"
+"""
+input Pick_insert_input {
+  Faction: Faction_obj_rel_insert_input
+  Game: Game_obj_rel_insert_input
+  GameUser: GameUser_obj_rel_insert_input
+  GameUsers: GameUser_arr_rel_insert_input
+  factionId: Int
+  gameId: Int
+  gameuserId: Int
+  pick_id: Int
+  picked: Boolean
+}
+
+"""aggregate max on columns"""
+type Pick_max_fields {
+  factionId: Int
+  gameId: Int
+  gameuserId: Int
+  pick_id: Int
+}
+
+"""
+order by max() on columns of table "Pick"
+"""
+input Pick_max_order_by {
+  factionId: order_by
+  gameId: order_by
+  gameuserId: order_by
+  pick_id: order_by
+}
+
+"""aggregate min on columns"""
+type Pick_min_fields {
+  factionId: Int
+  gameId: Int
+  gameuserId: Int
+  pick_id: Int
+}
+
+"""
+order by min() on columns of table "Pick"
+"""
+input Pick_min_order_by {
+  factionId: order_by
+  gameId: order_by
+  gameuserId: order_by
+  pick_id: order_by
+}
+
+"""
+response of any mutation on the table "Pick"
+"""
+type Pick_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [Pick!]!
+}
+
+"""
+input type for inserting object relation for remote table "Pick"
+"""
+input Pick_obj_rel_insert_input {
+  data: Pick_insert_input!
+
+  """on conflict condition"""
+  on_conflict: Pick_on_conflict
+}
+
+"""
+on conflict condition type for table "Pick"
+"""
+input Pick_on_conflict {
+  constraint: Pick_constraint!
+  update_columns: [Pick_update_column!]! = []
+  where: Pick_bool_exp
+}
+
+"""Ordering options when selecting data from "Pick"."""
+input Pick_order_by {
+  Faction: Faction_order_by
+  Game: Game_order_by
+  GameUser: GameUser_order_by
+  GameUsers_aggregate: GameUser_aggregate_order_by
+  factionId: order_by
+  gameId: order_by
+  gameuserId: order_by
+  pick_id: order_by
+  picked: order_by
+}
+
+"""primary key columns input for table: Pick"""
+input Pick_pk_columns_input {
+  pick_id: Int!
+}
+
+"""
+select columns of table "Pick"
+"""
+enum Pick_select_column {
+  """column name"""
+  factionId
+
+  """column name"""
+  gameId
+
+  """column name"""
+  gameuserId
+
+  """column name"""
+  pick_id
+
+  """column name"""
+  picked
+}
+
+"""
+input type for updating data in table "Pick"
+"""
+input Pick_set_input {
+  factionId: Int
+  gameId: Int
+  gameuserId: Int
+  pick_id: Int
+  picked: Boolean
+}
+
+"""aggregate stddev on columns"""
+type Pick_stddev_fields {
+  factionId: Float
+  gameId: Float
+  gameuserId: Float
+  pick_id: Float
+}
+
+"""
+order by stddev() on columns of table "Pick"
+"""
+input Pick_stddev_order_by {
+  factionId: order_by
+  gameId: order_by
+  gameuserId: order_by
+  pick_id: order_by
+}
+
+"""aggregate stddev_pop on columns"""
+type Pick_stddev_pop_fields {
+  factionId: Float
+  gameId: Float
+  gameuserId: Float
+  pick_id: Float
+}
+
+"""
+order by stddev_pop() on columns of table "Pick"
+"""
+input Pick_stddev_pop_order_by {
+  factionId: order_by
+  gameId: order_by
+  gameuserId: order_by
+  pick_id: order_by
+}
+
+"""aggregate stddev_samp on columns"""
+type Pick_stddev_samp_fields {
+  factionId: Float
+  gameId: Float
+  gameuserId: Float
+  pick_id: Float
+}
+
+"""
+order by stddev_samp() on columns of table "Pick"
+"""
+input Pick_stddev_samp_order_by {
+  factionId: order_by
+  gameId: order_by
+  gameuserId: order_by
+  pick_id: order_by
+}
+
+"""aggregate sum on columns"""
+type Pick_sum_fields {
+  factionId: Int
+  gameId: Int
+  gameuserId: Int
+  pick_id: Int
+}
+
+"""
+order by sum() on columns of table "Pick"
+"""
+input Pick_sum_order_by {
+  factionId: order_by
+  gameId: order_by
+  gameuserId: order_by
+  pick_id: order_by
+}
+
+"""
+update columns of table "Pick"
+"""
+enum Pick_update_column {
+  """column name"""
+  factionId
+
+  """column name"""
+  gameId
+
+  """column name"""
+  gameuserId
+
+  """column name"""
+  pick_id
+
+  """column name"""
+  picked
+}
+
+"""aggregate var_pop on columns"""
+type Pick_var_pop_fields {
+  factionId: Float
+  gameId: Float
+  gameuserId: Float
+  pick_id: Float
+}
+
+"""
+order by var_pop() on columns of table "Pick"
+"""
+input Pick_var_pop_order_by {
+  factionId: order_by
+  gameId: order_by
+  gameuserId: order_by
+  pick_id: order_by
+}
+
+"""aggregate var_samp on columns"""
+type Pick_var_samp_fields {
+  factionId: Float
+  gameId: Float
+  gameuserId: Float
+  pick_id: Float
+}
+
+"""
+order by var_samp() on columns of table "Pick"
+"""
+input Pick_var_samp_order_by {
+  factionId: order_by
+  gameId: order_by
+  gameuserId: order_by
+  pick_id: order_by
+}
+
+"""aggregate variance on columns"""
+type Pick_variance_fields {
+  factionId: Float
+  gameId: Float
+  gameuserId: Float
+  pick_id: Float
+}
+
+"""
+order by variance() on columns of table "Pick"
+"""
+input Pick_variance_order_by {
+  factionId: order_by
+  gameId: order_by
+  gameuserId: order_by
+  pick_id: order_by
+}
+
+"""
+Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'.
+"""
+input String_comparison_exp {
+  _eq: String
+  _gt: String
+  _gte: String
+
+  """does the column match the given case-insensitive pattern"""
+  _ilike: String
+  _in: [String!]
+
+  """
+  does the column match the given POSIX regular expression, case insensitive
+  """
+  _iregex: String
+  _is_null: Boolean
+
+  """does the column match the given pattern"""
+  _like: String
+  _lt: String
+  _lte: String
+  _neq: String
+
+  """does the column NOT match the given case-insensitive pattern"""
+  _nilike: String
+  _nin: [String!]
+
+  """
+  does the column NOT match the given POSIX regular expression, case insensitive
+  """
+  _niregex: String
+
+  """does the column NOT match the given pattern"""
+  _nlike: String
+
+  """
+  does the column NOT match the given POSIX regular expression, case sensitive
+  """
+  _nregex: String
+
+  """does the column NOT match the given SQL regular expression"""
+  _nsimilar: String
+
+  """
+  does the column match the given POSIX regular expression, case sensitive
+  """
+  _regex: String
+
+  """does the column match the given SQL regular expression"""
+  _similar: String
+}
+
+"""
+columns and relationships of "User"
+"""
+type User {
+  """An array relationship"""
+  GameUsers(
+    """distinct select on columns"""
+    distinct_on: [GameUser_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [GameUser_order_by!]
+
+    """filter the rows returned"""
+    where: GameUser_bool_exp
+  ): [GameUser!]!
+
+  """An aggregate relationship"""
+  GameUsers_aggregate(
+    """distinct select on columns"""
+    distinct_on: [GameUser_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [GameUser_order_by!]
+
+    """filter the rows returned"""
+    where: GameUser_bool_exp
+  ): GameUser_aggregate!
+
+  """An object relationship"""
+  Group: Group
+  auth0_id: String!
+  email: String
+  groupId: Int
+  name: String!
+  password: String
+  user_id: Int!
+}
+
+"""
+aggregated selection of "User"
+"""
+type User_aggregate {
+  aggregate: User_aggregate_fields
+  nodes: [User!]!
+}
+
+"""
+aggregate fields of "User"
+"""
+type User_aggregate_fields {
+  avg: User_avg_fields
+  count(columns: [User_select_column!], distinct: Boolean): Int!
+  max: User_max_fields
+  min: User_min_fields
+  stddev: User_stddev_fields
+  stddev_pop: User_stddev_pop_fields
+  stddev_samp: User_stddev_samp_fields
+  sum: User_sum_fields
+  var_pop: User_var_pop_fields
+  var_samp: User_var_samp_fields
+  variance: User_variance_fields
+}
+
+"""
+order by aggregate values of table "User"
+"""
+input User_aggregate_order_by {
+  avg: User_avg_order_by
+  count: order_by
+  max: User_max_order_by
+  min: User_min_order_by
+  stddev: User_stddev_order_by
+  stddev_pop: User_stddev_pop_order_by
+  stddev_samp: User_stddev_samp_order_by
+  sum: User_sum_order_by
+  var_pop: User_var_pop_order_by
+  var_samp: User_var_samp_order_by
+  variance: User_variance_order_by
+}
+
+"""
+input type for inserting array relation for remote table "User"
+"""
+input User_arr_rel_insert_input {
+  data: [User_insert_input!]!
+
+  """on conflict condition"""
+  on_conflict: User_on_conflict
+}
+
+"""aggregate avg on columns"""
+type User_avg_fields {
+  groupId: Float
+  user_id: Float
+}
+
+"""
+order by avg() on columns of table "User"
+"""
+input User_avg_order_by {
+  groupId: order_by
+  user_id: order_by
+}
+
+"""
+Boolean expression to filter rows from the table "User". All fields are combined with a logical 'AND'.
+"""
+input User_bool_exp {
+  GameUsers: GameUser_bool_exp
+  Group: Group_bool_exp
+  _and: [User_bool_exp!]
+  _not: User_bool_exp
+  _or: [User_bool_exp!]
+  auth0_id: String_comparison_exp
+  email: String_comparison_exp
+  groupId: Int_comparison_exp
+  name: String_comparison_exp
+  password: String_comparison_exp
+  user_id: Int_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "User"
+"""
+enum User_constraint {
+  """unique or primary key constraint"""
+  User_auth0_id_key
+
+  """unique or primary key constraint"""
+  User_id_key
+
+  """unique or primary key constraint"""
+  User_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "User"
+"""
+input User_inc_input {
+  groupId: Int
+  user_id: Int
+}
+
+"""
+input type for inserting data into table "User"
+"""
+input User_insert_input {
+  GameUsers: GameUser_arr_rel_insert_input
+  Group: Group_obj_rel_insert_input
+  auth0_id: String
+  email: String
+  groupId: Int
+  name: String
+  password: String
+  user_id: Int
+}
+
+"""aggregate max on columns"""
+type User_max_fields {
+  auth0_id: String
+  email: String
+  groupId: Int
+  name: String
+  password: String
+  user_id: Int
+}
+
+"""
+order by max() on columns of table "User"
+"""
+input User_max_order_by {
+  auth0_id: order_by
+  email: order_by
+  groupId: order_by
+  name: order_by
+  password: order_by
+  user_id: order_by
+}
+
+"""aggregate min on columns"""
+type User_min_fields {
+  auth0_id: String
+  email: String
+  groupId: Int
+  name: String
+  password: String
+  user_id: Int
+}
+
+"""
+order by min() on columns of table "User"
+"""
+input User_min_order_by {
+  auth0_id: order_by
+  email: order_by
+  groupId: order_by
+  name: order_by
+  password: order_by
+  user_id: order_by
+}
+
+"""
+response of any mutation on the table "User"
+"""
+type User_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [User!]!
+}
+
+"""
+input type for inserting object relation for remote table "User"
+"""
+input User_obj_rel_insert_input {
+  data: User_insert_input!
+
+  """on conflict condition"""
+  on_conflict: User_on_conflict
+}
+
+"""
+on conflict condition type for table "User"
+"""
+input User_on_conflict {
+  constraint: User_constraint!
+  update_columns: [User_update_column!]! = []
+  where: User_bool_exp
+}
+
+"""Ordering options when selecting data from "User"."""
+input User_order_by {
+  GameUsers_aggregate: GameUser_aggregate_order_by
+  Group: Group_order_by
+  auth0_id: order_by
+  email: order_by
+  groupId: order_by
+  name: order_by
+  password: order_by
+  user_id: order_by
+}
+
+"""primary key columns input for table: User"""
+input User_pk_columns_input {
+  auth0_id: String!
+}
+
+"""
+select columns of table "User"
+"""
+enum User_select_column {
+  """column name"""
+  auth0_id
+
+  """column name"""
+  email
+
+  """column name"""
+  groupId
+
+  """column name"""
+  name
+
+  """column name"""
+  password
+
+  """column name"""
+  user_id
+}
+
+"""
+input type for updating data in table "User"
+"""
+input User_set_input {
+  auth0_id: String
+  email: String
+  groupId: Int
+  name: String
+  password: String
+  user_id: Int
+}
+
+"""aggregate stddev on columns"""
+type User_stddev_fields {
+  groupId: Float
+  user_id: Float
+}
+
+"""
+order by stddev() on columns of table "User"
+"""
+input User_stddev_order_by {
+  groupId: order_by
+  user_id: order_by
+}
+
+"""aggregate stddev_pop on columns"""
+type User_stddev_pop_fields {
+  groupId: Float
+  user_id: Float
+}
+
+"""
+order by stddev_pop() on columns of table "User"
+"""
+input User_stddev_pop_order_by {
+  groupId: order_by
+  user_id: order_by
+}
+
+"""aggregate stddev_samp on columns"""
+type User_stddev_samp_fields {
+  groupId: Float
+  user_id: Float
+}
+
+"""
+order by stddev_samp() on columns of table "User"
+"""
+input User_stddev_samp_order_by {
+  groupId: order_by
+  user_id: order_by
+}
+
+"""aggregate sum on columns"""
+type User_sum_fields {
+  groupId: Int
+  user_id: Int
+}
+
+"""
+order by sum() on columns of table "User"
+"""
+input User_sum_order_by {
+  groupId: order_by
+  user_id: order_by
+}
+
+"""
+update columns of table "User"
+"""
+enum User_update_column {
+  """column name"""
+  auth0_id
+
+  """column name"""
+  email
+
+  """column name"""
+  groupId
+
+  """column name"""
+  name
+
+  """column name"""
+  password
+
+  """column name"""
+  user_id
+}
+
+"""aggregate var_pop on columns"""
+type User_var_pop_fields {
+  groupId: Float
+  user_id: Float
+}
+
+"""
+order by var_pop() on columns of table "User"
+"""
+input User_var_pop_order_by {
+  groupId: order_by
+  user_id: order_by
+}
+
+"""aggregate var_samp on columns"""
+type User_var_samp_fields {
+  groupId: Float
+  user_id: Float
+}
+
+"""
+order by var_samp() on columns of table "User"
+"""
+input User_var_samp_order_by {
+  groupId: order_by
+  user_id: order_by
+}
+
+"""aggregate variance on columns"""
+type User_variance_fields {
+  groupId: Float
+  user_id: Float
+}
+
+"""
+order by variance() on columns of table "User"
+"""
+input User_variance_order_by {
+  groupId: order_by
+  user_id: order_by
+}
+
+scalar date
+
+"""
+Boolean expression to compare columns of type "date". All fields are combined with logical 'AND'.
+"""
+input date_comparison_exp {
+  _eq: date
+  _gt: date
+  _gte: date
+  _in: [date!]
+  _is_null: Boolean
+  _lt: date
+  _lte: date
+  _neq: date
+  _nin: [date!]
+}
+
+"""mutation root"""
+type mutation_root {
+  createGroup(GroupName: String, password: String): GroupOutput
+
+  """
+  delete data from the table: "Ban"
+  """
+  delete_Ban(
+    """filter the rows which have to be deleted"""
+    where: Ban_bool_exp!
+  ): Ban_mutation_response
+
+  """
+  delete single row from the table: "Ban"
+  """
+  delete_Ban_by_pk(ban_id: Int!): Ban
+
+  """
+  delete data from the table: "Faction"
+  """
+  delete_Faction(
+    """filter the rows which have to be deleted"""
+    where: Faction_bool_exp!
+  ): Faction_mutation_response
+
+  """
+  delete single row from the table: "Faction"
+  """
+  delete_Faction_by_pk(name: String!): Faction
+
+  """
+  delete data from the table: "Game"
+  """
+  delete_Game(
+    """filter the rows which have to be deleted"""
+    where: Game_bool_exp!
+  ): Game_mutation_response
+
+  """
+  delete data from the table: "GameUser"
+  """
+  delete_GameUser(
+    """filter the rows which have to be deleted"""
+    where: GameUser_bool_exp!
+  ): GameUser_mutation_response
+
+  """
+  delete single row from the table: "GameUser"
+  """
+  delete_GameUser_by_pk(gameuser_id: Int!): GameUser
+
+  """
+  delete single row from the table: "Game"
+  """
+  delete_Game_by_pk(game_id: Int!): Game
+
+  """
+  delete data from the table: "Group"
+  """
+  delete_Group(
+    """filter the rows which have to be deleted"""
+    where: Group_bool_exp!
+  ): Group_mutation_response
+
+  """
+  delete single row from the table: "Group"
+  """
+  delete_Group_by_pk(group_id: Int!): Group
+
+  """
+  delete data from the table: "Pick"
+  """
+  delete_Pick(
+    """filter the rows which have to be deleted"""
+    where: Pick_bool_exp!
+  ): Pick_mutation_response
+
+  """
+  delete single row from the table: "Pick"
+  """
+  delete_Pick_by_pk(pick_id: Int!): Pick
+
+  """
+  delete data from the table: "User"
+  """
+  delete_User(
+    """filter the rows which have to be deleted"""
+    where: User_bool_exp!
+  ): User_mutation_response
+
+  """
+  delete single row from the table: "User"
+  """
+  delete_User_by_pk(auth0_id: String!): User
+
+  """
+  insert data into the table: "Ban"
+  """
+  insert_Ban(
+    """the rows to be inserted"""
+    objects: [Ban_insert_input!]!
+
+    """on conflict condition"""
+    on_conflict: Ban_on_conflict
+  ): Ban_mutation_response
+
+  """
+  insert a single row into the table: "Ban"
+  """
+  insert_Ban_one(
+    """the row to be inserted"""
+    object: Ban_insert_input!
+
+    """on conflict condition"""
+    on_conflict: Ban_on_conflict
+  ): Ban
+
+  """
+  insert data into the table: "Faction"
+  """
+  insert_Faction(
+    """the rows to be inserted"""
+    objects: [Faction_insert_input!]!
+
+    """on conflict condition"""
+    on_conflict: Faction_on_conflict
+  ): Faction_mutation_response
+
+  """
+  insert a single row into the table: "Faction"
+  """
+  insert_Faction_one(
+    """the row to be inserted"""
+    object: Faction_insert_input!
+
+    """on conflict condition"""
+    on_conflict: Faction_on_conflict
+  ): Faction
+
+  """
+  insert data into the table: "Game"
+  """
+  insert_Game(
+    """the rows to be inserted"""
+    objects: [Game_insert_input!]!
+
+    """on conflict condition"""
+    on_conflict: Game_on_conflict
+  ): Game_mutation_response
+
+  """
+  insert data into the table: "GameUser"
+  """
+  insert_GameUser(
+    """the rows to be inserted"""
+    objects: [GameUser_insert_input!]!
+
+    """on conflict condition"""
+    on_conflict: GameUser_on_conflict
+  ): GameUser_mutation_response
+
+  """
+  insert a single row into the table: "GameUser"
+  """
+  insert_GameUser_one(
+    """the row to be inserted"""
+    object: GameUser_insert_input!
+
+    """on conflict condition"""
+    on_conflict: GameUser_on_conflict
+  ): GameUser
+
+  """
+  insert a single row into the table: "Game"
+  """
+  insert_Game_one(
+    """the row to be inserted"""
+    object: Game_insert_input!
+
+    """on conflict condition"""
+    on_conflict: Game_on_conflict
+  ): Game
+
+  """
+  insert data into the table: "Group"
+  """
+  insert_Group(
+    """the rows to be inserted"""
+    objects: [Group_insert_input!]!
+
+    """on conflict condition"""
+    on_conflict: Group_on_conflict
+  ): Group_mutation_response
+
+  """
+  insert a single row into the table: "Group"
+  """
+  insert_Group_one(
+    """the row to be inserted"""
+    object: Group_insert_input!
+
+    """on conflict condition"""
+    on_conflict: Group_on_conflict
+  ): Group
+
+  """
+  insert data into the table: "Pick"
+  """
+  insert_Pick(
+    """the rows to be inserted"""
+    objects: [Pick_insert_input!]!
+
+    """on conflict condition"""
+    on_conflict: Pick_on_conflict
+  ): Pick_mutation_response
+
+  """
+  insert a single row into the table: "Pick"
+  """
+  insert_Pick_one(
+    """the row to be inserted"""
+    object: Pick_insert_input!
+
+    """on conflict condition"""
+    on_conflict: Pick_on_conflict
+  ): Pick
+
+  """
+  insert data into the table: "User"
+  """
+  insert_User(
+    """the rows to be inserted"""
+    objects: [User_insert_input!]!
+
+    """on conflict condition"""
+    on_conflict: User_on_conflict
+  ): User_mutation_response
+
+  """
+  insert a single row into the table: "User"
+  """
+  insert_User_one(
+    """the row to be inserted"""
+    object: User_insert_input!
+
+    """on conflict condition"""
+    on_conflict: User_on_conflict
+  ): User
+
+  """
+  update data of the table: "Ban"
+  """
+  update_Ban(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: Ban_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: Ban_set_input
+
+    """filter the rows which have to be updated"""
+    where: Ban_bool_exp!
+  ): Ban_mutation_response
+
+  """
+  update single row of the table: "Ban"
+  """
+  update_Ban_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: Ban_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: Ban_set_input
+    pk_columns: Ban_pk_columns_input!
+  ): Ban
+
+  """
+  update data of the table: "Faction"
+  """
+  update_Faction(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: Faction_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: Faction_set_input
+
+    """filter the rows which have to be updated"""
+    where: Faction_bool_exp!
+  ): Faction_mutation_response
+
+  """
+  update single row of the table: "Faction"
+  """
+  update_Faction_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: Faction_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: Faction_set_input
+    pk_columns: Faction_pk_columns_input!
+  ): Faction
+
+  """
+  update data of the table: "Game"
+  """
+  update_Game(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: Game_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: Game_set_input
+
+    """filter the rows which have to be updated"""
+    where: Game_bool_exp!
+  ): Game_mutation_response
+
+  """
+  update data of the table: "GameUser"
+  """
+  update_GameUser(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: GameUser_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: GameUser_set_input
+
+    """filter the rows which have to be updated"""
+    where: GameUser_bool_exp!
+  ): GameUser_mutation_response
+
+  """
+  update single row of the table: "GameUser"
+  """
+  update_GameUser_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: GameUser_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: GameUser_set_input
+    pk_columns: GameUser_pk_columns_input!
+  ): GameUser
+
+  """
+  update single row of the table: "Game"
+  """
+  update_Game_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: Game_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: Game_set_input
+    pk_columns: Game_pk_columns_input!
+  ): Game
+
+  """
+  update data of the table: "Group"
+  """
+  update_Group(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: Group_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: Group_set_input
+
+    """filter the rows which have to be updated"""
+    where: Group_bool_exp!
+  ): Group_mutation_response
+
+  """
+  update single row of the table: "Group"
+  """
+  update_Group_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: Group_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: Group_set_input
+    pk_columns: Group_pk_columns_input!
+  ): Group
+
+  """
+  update data of the table: "Pick"
+  """
+  update_Pick(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: Pick_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: Pick_set_input
+
+    """filter the rows which have to be updated"""
+    where: Pick_bool_exp!
+  ): Pick_mutation_response
+
+  """
+  update single row of the table: "Pick"
+  """
+  update_Pick_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: Pick_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: Pick_set_input
+    pk_columns: Pick_pk_columns_input!
+  ): Pick
+
+  """
+  update data of the table: "User"
+  """
+  update_User(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: User_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: User_set_input
+
+    """filter the rows which have to be updated"""
+    where: User_bool_exp!
+  ): User_mutation_response
+
+  """
+  update single row of the table: "User"
+  """
+  update_User_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: User_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: User_set_input
+    pk_columns: User_pk_columns_input!
+  ): User
+}
+
+"""column ordering options"""
+enum order_by {
+  """in ascending order, nulls last"""
+  asc
+
+  """in ascending order, nulls first"""
+  asc_nulls_first
+
+  """in ascending order, nulls last"""
+  asc_nulls_last
+
+  """in descending order, nulls first"""
+  desc
+
+  """in descending order, nulls first"""
+  desc_nulls_first
+
+  """in descending order, nulls last"""
+  desc_nulls_last
+}
+
+type query_root {
+  """
+  fetch data from the table: "Ban"
+  """
+  Ban(
+    """distinct select on columns"""
+    distinct_on: [Ban_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Ban_order_by!]
+
+    """filter the rows returned"""
+    where: Ban_bool_exp
+  ): [Ban!]!
+
+  """
+  fetch aggregated fields from the table: "Ban"
+  """
+  Ban_aggregate(
+    """distinct select on columns"""
+    distinct_on: [Ban_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Ban_order_by!]
+
+    """filter the rows returned"""
+    where: Ban_bool_exp
+  ): Ban_aggregate!
+
+  """fetch data from the table: "Ban" using primary key columns"""
+  Ban_by_pk(ban_id: Int!): Ban
+
+  """An array relationship"""
+  Faction(
+    """distinct select on columns"""
+    distinct_on: [Faction_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Faction_order_by!]
+
+    """filter the rows returned"""
+    where: Faction_bool_exp
+  ): [Faction!]!
+
+  """An aggregate relationship"""
+  Faction_aggregate(
+    """distinct select on columns"""
+    distinct_on: [Faction_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Faction_order_by!]
+
+    """filter the rows returned"""
+    where: Faction_bool_exp
+  ): Faction_aggregate!
+
+  """fetch data from the table: "Faction" using primary key columns"""
+  Faction_by_pk(name: String!): Faction
+
+  """
+  fetch data from the table: "Game"
+  """
+  Game(
+    """distinct select on columns"""
+    distinct_on: [Game_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Game_order_by!]
+
+    """filter the rows returned"""
+    where: Game_bool_exp
+  ): [Game!]!
+
+  """
+  fetch data from the table: "GameUser"
+  """
+  GameUser(
+    """distinct select on columns"""
+    distinct_on: [GameUser_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [GameUser_order_by!]
+
+    """filter the rows returned"""
+    where: GameUser_bool_exp
+  ): [GameUser!]!
+
+  """
+  fetch aggregated fields from the table: "GameUser"
+  """
+  GameUser_aggregate(
+    """distinct select on columns"""
+    distinct_on: [GameUser_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [GameUser_order_by!]
+
+    """filter the rows returned"""
+    where: GameUser_bool_exp
+  ): GameUser_aggregate!
+
+  """fetch data from the table: "GameUser" using primary key columns"""
+  GameUser_by_pk(gameuser_id: Int!): GameUser
+
+  """
+  fetch aggregated fields from the table: "Game"
+  """
+  Game_aggregate(
+    """distinct select on columns"""
+    distinct_on: [Game_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Game_order_by!]
+
+    """filter the rows returned"""
+    where: Game_bool_exp
+  ): Game_aggregate!
+
+  """fetch data from the table: "Game" using primary key columns"""
+  Game_by_pk(game_id: Int!): Game
+
+  """
+  fetch data from the table: "Group"
+  """
+  Group(
+    """distinct select on columns"""
+    distinct_on: [Group_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Group_order_by!]
+
+    """filter the rows returned"""
+    where: Group_bool_exp
+  ): [Group!]!
+
+  """
+  fetch aggregated fields from the table: "Group"
+  """
+  Group_aggregate(
+    """distinct select on columns"""
+    distinct_on: [Group_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Group_order_by!]
+
+    """filter the rows returned"""
+    where: Group_bool_exp
+  ): Group_aggregate!
+
+  """fetch data from the table: "Group" using primary key columns"""
+  Group_by_pk(group_id: Int!): Group
+
+  """
+  fetch data from the table: "Pick"
+  """
+  Pick(
+    """distinct select on columns"""
+    distinct_on: [Pick_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Pick_order_by!]
+
+    """filter the rows returned"""
+    where: Pick_bool_exp
+  ): [Pick!]!
+
+  """
+  fetch aggregated fields from the table: "Pick"
+  """
+  Pick_aggregate(
+    """distinct select on columns"""
+    distinct_on: [Pick_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Pick_order_by!]
+
+    """filter the rows returned"""
+    where: Pick_bool_exp
+  ): Pick_aggregate!
+
+  """fetch data from the table: "Pick" using primary key columns"""
+  Pick_by_pk(pick_id: Int!): Pick
+
+  """
+  fetch data from the table: "User"
+  """
+  User(
+    """distinct select on columns"""
+    distinct_on: [User_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [User_order_by!]
+
+    """filter the rows returned"""
+    where: User_bool_exp
+  ): [User!]!
+
+  """
+  fetch aggregated fields from the table: "User"
+  """
+  User_aggregate(
+    """distinct select on columns"""
+    distinct_on: [User_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [User_order_by!]
+
+    """filter the rows returned"""
+    where: User_bool_exp
+  ): User_aggregate!
+
+  """fetch data from the table: "User" using primary key columns"""
+  User_by_pk(auth0_id: String!): User
+}
+
+type subscription_root {
+  """
+  fetch data from the table: "Ban"
+  """
+  Ban(
+    """distinct select on columns"""
+    distinct_on: [Ban_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Ban_order_by!]
+
+    """filter the rows returned"""
+    where: Ban_bool_exp
+  ): [Ban!]!
+
+  """
+  fetch aggregated fields from the table: "Ban"
+  """
+  Ban_aggregate(
+    """distinct select on columns"""
+    distinct_on: [Ban_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Ban_order_by!]
+
+    """filter the rows returned"""
+    where: Ban_bool_exp
+  ): Ban_aggregate!
+
+  """fetch data from the table: "Ban" using primary key columns"""
+  Ban_by_pk(ban_id: Int!): Ban
+
+  """An array relationship"""
+  Faction(
+    """distinct select on columns"""
+    distinct_on: [Faction_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Faction_order_by!]
+
+    """filter the rows returned"""
+    where: Faction_bool_exp
+  ): [Faction!]!
+
+  """An aggregate relationship"""
+  Faction_aggregate(
+    """distinct select on columns"""
+    distinct_on: [Faction_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Faction_order_by!]
+
+    """filter the rows returned"""
+    where: Faction_bool_exp
+  ): Faction_aggregate!
+
+  """fetch data from the table: "Faction" using primary key columns"""
+  Faction_by_pk(name: String!): Faction
+
+  """
+  fetch data from the table: "Game"
+  """
+  Game(
+    """distinct select on columns"""
+    distinct_on: [Game_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Game_order_by!]
+
+    """filter the rows returned"""
+    where: Game_bool_exp
+  ): [Game!]!
+
+  """
+  fetch data from the table: "GameUser"
+  """
+  GameUser(
+    """distinct select on columns"""
+    distinct_on: [GameUser_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [GameUser_order_by!]
+
+    """filter the rows returned"""
+    where: GameUser_bool_exp
+  ): [GameUser!]!
+
+  """
+  fetch aggregated fields from the table: "GameUser"
+  """
+  GameUser_aggregate(
+    """distinct select on columns"""
+    distinct_on: [GameUser_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [GameUser_order_by!]
+
+    """filter the rows returned"""
+    where: GameUser_bool_exp
+  ): GameUser_aggregate!
+
+  """fetch data from the table: "GameUser" using primary key columns"""
+  GameUser_by_pk(gameuser_id: Int!): GameUser
+
+  """
+  fetch aggregated fields from the table: "Game"
+  """
+  Game_aggregate(
+    """distinct select on columns"""
+    distinct_on: [Game_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Game_order_by!]
+
+    """filter the rows returned"""
+    where: Game_bool_exp
+  ): Game_aggregate!
+
+  """fetch data from the table: "Game" using primary key columns"""
+  Game_by_pk(game_id: Int!): Game
+
+  """
+  fetch data from the table: "Group"
+  """
+  Group(
+    """distinct select on columns"""
+    distinct_on: [Group_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Group_order_by!]
+
+    """filter the rows returned"""
+    where: Group_bool_exp
+  ): [Group!]!
+
+  """
+  fetch aggregated fields from the table: "Group"
+  """
+  Group_aggregate(
+    """distinct select on columns"""
+    distinct_on: [Group_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Group_order_by!]
+
+    """filter the rows returned"""
+    where: Group_bool_exp
+  ): Group_aggregate!
+
+  """fetch data from the table: "Group" using primary key columns"""
+  Group_by_pk(group_id: Int!): Group
+
+  """
+  fetch data from the table: "Pick"
+  """
+  Pick(
+    """distinct select on columns"""
+    distinct_on: [Pick_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Pick_order_by!]
+
+    """filter the rows returned"""
+    where: Pick_bool_exp
+  ): [Pick!]!
+
+  """
+  fetch aggregated fields from the table: "Pick"
+  """
+  Pick_aggregate(
+    """distinct select on columns"""
+    distinct_on: [Pick_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [Pick_order_by!]
+
+    """filter the rows returned"""
+    where: Pick_bool_exp
+  ): Pick_aggregate!
+
+  """fetch data from the table: "Pick" using primary key columns"""
+  Pick_by_pk(pick_id: Int!): Pick
+
+  """
+  fetch data from the table: "User"
+  """
+  User(
+    """distinct select on columns"""
+    distinct_on: [User_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [User_order_by!]
+
+    """filter the rows returned"""
+    where: User_bool_exp
+  ): [User!]!
+
+  """
+  fetch aggregated fields from the table: "User"
+  """
+  User_aggregate(
+    """distinct select on columns"""
+    distinct_on: [User_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [User_order_by!]
+
+    """filter the rows returned"""
+    where: User_bool_exp
+  ): User_aggregate!
+
+  """fetch data from the table: "User" using primary key columns"""
+  User_by_pk(auth0_id: String!): User
+}
+
